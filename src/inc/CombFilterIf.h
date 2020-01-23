@@ -2,8 +2,7 @@
 #define __CombFilterIf_hdr__
 
 #include "ErrorDef.h"
-
-class CCombFilterBase;
+//class CCombFilterBase;
 
 /*! \brief interface class for the comb filter (FIR & IIR)
 */
@@ -33,7 +32,7 @@ public:
         kParamGain,                     //!< gain as factor (usually -1...1)
         kParamDelay,                    //!< delay in seconds for specification of comb width
 
-        kNumFilterParams
+//        kNumFilterParams
     };
 
     /*! returns the current project version
@@ -84,7 +83,7 @@ public:
     \param eParam
     \return float
     */
-    float   getParam (FilterParam_t eParam) const;
+    virtual float   getParam (FilterParam_t eParam) const;
     
     /*! processes one block of audio
     \param ppfInputBuffer input buffer [numChannels][iNumberOfFrames]
@@ -93,16 +92,32 @@ public:
     \return Error_t
     */
     Error_t process (float **ppfInputBuffer, float **ppfOutputBuffer, int iNumberOfFrames);
+    
+    
+    Error_t setFilterType(CombFilterType_t eFilterType);
+    
+    CombFilterType_t getFilterType(CombFilterType_t eFilterType);
+    
+    
 
 protected:
     CCombFilterIf ();
     virtual ~CCombFilterIf ();
 
 private:
-    bool            m_bIsInitialized;   //!< internal bool to check whether the init function has been called
-    CCombFilterBase *m_pCCombFilter;    //!< handle of the comb filter
-
-    float           m_fSampleRate;      //!< audio sample rate in Hz
+    
+    virtual Error_t initIntern(CombFilterType_t eFilterType, float fMaxDelayLengthInS, float fSampleRateInHz, int iNumChannels ) = 0;
+    virtual Error_t resetIntern() = 0;
+    virtual Error_t setParamIntern(FilterParam_t eParam, float fParamValue) = 0;
+    virtual Error_t processFIR(float **ppfInputBuffer, float **ppfOutputBuffer, int iNumberOfFrames) = 0;
+    virtual Error_t processIIR(float **ppfInputBuffer, float **ppfOutputBuffer, int iNumberOfFrames) = 0;
+    
+    FilterParam_t    m_eParam;
+    CombFilterType_t m_eFilterType;
+    float            m_fParamValue;
+    bool             m_bIsInitialized;   //!< internal bool to check whether the init function has been called
+    //CCombFilterBase *m_pCCombFilter;    //!< handle of the comb filter
+    //float            m_fSampleRate;      //!< audio sample rate in Hz
 };
 
 #endif // #if !defined(__CombFilterIf_hdr__)

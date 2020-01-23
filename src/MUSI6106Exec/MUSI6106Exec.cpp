@@ -18,93 +18,112 @@ void    showClInfo ();
 int main(int argc, char* argv[])
 {
     std::string             sInputFilePath,                 //!< file paths
-                            sOutputFilePath;
-
+                            sOutputFilePath,
+                            sFilterType;
+    
+    float                   sFilterDelay,
+                            sFilterGain,
+                            sMaxFilterDelay;
+    
     static const int        kBlockSize = 1024;
 
     clock_t                 time = 0;
 
-    float                   **ppfAudioData = 0;
+    float                   **ppfAudioInput = 0,
+                            **ppfAudioOutput = 0;
 
-    CAudioFileIf            *phAudioFile = 0;
-    std::fstream            hOutputFile;
+    CAudioFileIf            *phAudioFile = 0,
+                            *phAudioOutputFile = 0;
+    CCombFilterIf           *pcCombFilter = 0;
     CAudioFileIf::FileSpec_t stFileSpec;
 
     showClInfo();
 
     //////////////////////////////////////////////////////////////////////////////
     // parse command line arguments
-    if (argc < 2)
+    if (argc < 5)
     {
-        cout << "Missing audio input path!";
+        cout << "Missing paramters, try again!";
         return -1;
     }
     else
     {
         sInputFilePath = argv[1];
-        sOutputFilePath = sInputFilePath + ".txt";
+        sOutputFilePath = "/Users/sandeepdasari/Downloads/new.wav";
+        
+        sFilterType = argv[2];
+        sMaxFilterDelay = atof(argv[3]);
+        sFilterDelay = atof(argv[4]);
+        sFilterGain = atof(argv[5]);
     }
 
     //////////////////////////////////////////////////////////////////////////////
     // open the input wave file
     CAudioFileIf::create(phAudioFile);
+    CAudioFileIf::create(phAudioOutputFile);
+    
+    CCombFilterIf::create(pcCombFilter);
+    
     phAudioFile->openFile(sInputFilePath, CAudioFileIf::kFileRead);
+    
     if (!phAudioFile->isOpen())
     {
         cout << "Wave file open error!";
         return -1;
     }
     phAudioFile->getFileSpec(stFileSpec);
-
+    
     //////////////////////////////////////////////////////////////////////////////
-    // open the output text file
-    hOutputFile.open(sOutputFilePath.c_str(), std::ios::out);
-    if (!hOutputFile.is_open())
-    {
-        cout << "Text file open error!";
-        return -1;
+    // init the comb filter interface
+    if(sFilterType == "FIR") {
+        cout<<stFileSpec.iNumChannels;
+        pcCombFilter->init(CCombFilterIf::kCombFIR, sMaxFilterDelay, stFileSpec.fSampleRateInHz, stFileSpec.iNumChannels);
+        pcCombFilter->setParam(CCombFilterIf::kParamDelay, sFilterDelay);
+        pcCombFilter->setParam(CCombFilterIf::kParamGain, sFilterGain);
+    }
+    else if(sFilterType == "IIR") {
+        pcCombFilter->init(CCombFilterIf::CombFilterType_t::kCombIIR, sMaxFilterDelay,stFileSpec.fSampleRateInHz,stFileSpec.iNumChannels);
+        pcCombFilter->setParam(CCombFilterIf::kParamDelay, sFilterDelay);
+        pcCombFilter->setParam(CCombFilterIf::kParamGain, sFilterGain);
     }
 
     //////////////////////////////////////////////////////////////////////////////
     // allocate memory
-    ppfAudioData = new float*[stFileSpec.iNumChannels];
-    for (int i = 0; i < stFileSpec.iNumChannels; i++)
-        ppfAudioData[i] = new float[kBlockSize];
+    ppfAudioInput = new float*[stFileSpec.iNumChannels];
+    for (int i = 0; i < stFileSpec.iNumChannels; i++) {
+        ppfAudioInput[i] = new float[kBlockSize];
+    }
 
     time = clock();
     //////////////////////////////////////////////////////////////////////////////
-    // get audio data and write it to the output file
+    // get audio data and process it
+    phAudioOutputFile->openFile(sOutputFilePath, CAudioFileIf::kFileWrite, &stFileSpec);
+    
     while (!phAudioFile->isEof())
     {
         long long iNumFrames = kBlockSize;
-        phAudioFile->readData(ppfAudioData, iNumFrames);
-
+        phAudioFile->readData(ppfAudioInput, iNumFrames);
+        
         cout << "\r" << "reading and writing";
-
-        for (int i = 0; i < iNumFrames; i++)
-        {
-            for (int c = 0; c < stFileSpec.iNumChannels; c++)
-            {
-                hOutputFile << ppfAudioData[c][i] << "\t";
-            }
-            hOutputFile << endl;
-        }
+        pcCombFilter->process(ppfAudioInput, ppfAudioInput, (int) iNumFrames);
+        phAudioOutputFile->writeData(ppfAudioInput, iNumFrames);
     }
-
+    
+    
     cout << "\nreading/writing done in: \t" << (clock() - time)*1.F / CLOCKS_PER_SEC << " seconds." << endl;
 
     //////////////////////////////////////////////////////////////////////////////
     // clean-up
     CAudioFileIf::destroy(phAudioFile);
-    hOutputFile.close();
 
-    for (int i = 0; i < stFileSpec.iNumChannels; i++)
-        delete[] ppfAudioData[i];
-    delete[] ppfAudioData;
-    ppfAudioData = 0;
-
+    for (int i = 0; i < stFileSpec.iNumChannels; i++) {
+        delete[] ppfAudioInput[i];
+    }
+    
+    delete[] ppfAudioInput;
+    
+    ppfAudioInput = 0;
     return 0;
-
 }
 
 

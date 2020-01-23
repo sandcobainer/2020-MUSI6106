@@ -48,11 +48,13 @@ public:
     \return Error_t
     */
     static Error_t create (CAudioFileIf*& pCInstance);
+    
     /*! destroys and audio file IO instance
     \param pCInstance
     \return Error_t
     */
     static Error_t destroy (CAudioFileIf*& pCInstance);
+    
     /*! reset instance to initial state
     \param  bFreeMemory: also free the internal memory if true
     \return Error_t

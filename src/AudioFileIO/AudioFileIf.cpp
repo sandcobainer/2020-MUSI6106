@@ -29,7 +29,7 @@ Error_t CAudioFileIf::create( CAudioFileIf*& pCInstance )
 Error_t CAudioFileIf::destroy( CAudioFileIf*& pCInstance )
 {
     delete pCInstance;
-    pCInstance  = 0;
+    pCInstance = 0;
 
     return kNoError;
 }
