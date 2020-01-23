@@ -1,0 +1,11 @@
+/Users/sandeepdasari/Desktop/2020-MUSI6106/CMakeFiles/rebuild_cache.dir
+/Users/sandeepdasari/Desktop/2020-MUSI6106/CMakeFiles/edit_cache.dir
+/Users/sandeepdasari/Desktop/2020-MUSI6106/MUSI6106Exec/CMakeFiles/rebuild_cache.dir
+/Users/sandeepdasari/Desktop/2020-MUSI6106/MUSI6106Exec/CMakeFiles/edit_cache.dir
+/Users/sandeepdasari/Desktop/2020-MUSI6106/MUSI6106Exec/CMakeFiles/MUSI6106Exec.dir
+/Users/sandeepdasari/Desktop/2020-MUSI6106/AudioFileIO/CMakeFiles/rebuild_cache.dir
+/Users/sandeepdasari/Desktop/2020-MUSI6106/AudioFileIO/CMakeFiles/edit_cache.dir
+/Users/sandeepdasari/Desktop/2020-MUSI6106/AudioFileIO/CMakeFiles/AudioFileIO.dir
+/Users/sandeepdasari/Desktop/2020-MUSI6106/AudioFileIO/sndlib/CMakeFiles/rebuild_cache.dir
+/Users/sandeepdasari/Desktop/2020-MUSI6106/AudioFileIO/sndlib/CMakeFiles/edit_cache.dir
+/Users/sandeepdasari/Desktop/2020-MUSI6106/AudioFileIO/sndlib/CMakeFiles/sndlib.dir

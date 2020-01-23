@@ -67,7 +67,8 @@ public:
     \param psFileSpec
     \return Error_t
     */
-    virtual Error_t openFile (std::string cAudioFileName, FileIoType_t eIoType, FileSpec_t const *psFileSpec = 0) = 0;
+    virtual Error_t openFile (std::string cAudioFileName, FileIoType_t eIoType, FileSpec_t const *psFileSpec = 0) = 0;   // = 0 means default value, 2nd = 0 is a virtual function
+    
     /*! close the current file
     \return Error_t
     */
@@ -78,14 +79,17 @@ public:
     \param iNumFrames: number of frames to read (per channel), is updated to the number of frames actually read
     \return Error_t
     */
-    virtual Error_t readData (float **ppfAudioData, long long int &iNumFrames);
+    virtual Error_t readData (float **ppfAudioData, long long int &iNumFrames);              // double pointer is used multiple audio channels
+                                                                                             // wav file = LRLRLRLRLRLR 2 channel audio
+                                                                                             // & is pass by reference - function can be changed inthis function,
+    
     
     /*! write data to file and increments write position
     \param ppfAudioData: [channels][iNumFrames]
     \param iNumFrames: number of frames to write (per channel)
     \return Error_t
     */
-    virtual Error_t writeData (float **ppfAudioData, long long int iNumFrames);
+    virtual Error_t writeData (float **ppfAudioData, long long int iNumFrames);             // no &, so iNumFrames cnanot be changed in this function
 
     /*! retrieve file specifications
     \param sFileSpec

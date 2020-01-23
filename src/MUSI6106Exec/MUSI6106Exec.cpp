@@ -3,7 +3,6 @@
 #include <ctime>
 
 #include "MUSI6106Config.h"
-
 #include "AudioFileIf.h"
 #include "CombFilterIf.h"
 
@@ -29,14 +28,13 @@ int main(int argc, char* argv[])
 
     clock_t                 time = 0;
 
-    float                   **ppfAudioInput = 0,
-                            **ppfAudioOutput = 0;
+    float                   **ppfAudioData = 0;
 
     CAudioFileIf            *phAudioFile = 0,
                             *phAudioOutputFile = 0;
     CCombFilterIf           *pcCombFilter = 0;
     CAudioFileIf::FileSpec_t stFileSpec;
-
+    
     showClInfo();
 
     //////////////////////////////////////////////////////////////////////////////
@@ -44,6 +42,7 @@ int main(int argc, char* argv[])
     if (argc < 5)
     {
         cout << "Missing paramters, try again!";
+
         return -1;
     }
     else
@@ -76,7 +75,6 @@ int main(int argc, char* argv[])
     //////////////////////////////////////////////////////////////////////////////
     // init the comb filter interface
     if(sFilterType == "FIR") {
-        cout<<stFileSpec.iNumChannels;
         pcCombFilter->init(CCombFilterIf::kCombFIR, sMaxFilterDelay, stFileSpec.fSampleRateInHz, stFileSpec.iNumChannels);
         pcCombFilter->setParam(CCombFilterIf::kParamDelay, sFilterDelay);
         pcCombFilter->setParam(CCombFilterIf::kParamGain, sFilterGain);
@@ -89,11 +87,20 @@ int main(int argc, char* argv[])
 
     //////////////////////////////////////////////////////////////////////////////
     // allocate memory
-    ppfAudioInput = new float*[stFileSpec.iNumChannels];
+    ppfAudioData = new float*[stFileSpec.iNumChannels];
     for (int i = 0; i < stFileSpec.iNumChannels; i++) {
-        ppfAudioInput[i] = new float[kBlockSize];
+        ppfAudioData[i] = new float[kBlockSize];
     }
-
+    
+    //////////////////////////////////////////////////////////////////////////////
+    // allocate memory
+    // create a pointer to the iNumChannels number of buffer
+    ppfAudioData = new float*[stFileSpec.iNumChannels];
+    for(int i=0;i<stFileSpec.iNumChannels;i++)
+        // create buffer of size blockSize
+        ppfAudioData[i]=new float[kBlockSize];
+    
+    
     time = clock();
     //////////////////////////////////////////////////////////////////////////////
     // get audio data and process it
@@ -102,11 +109,11 @@ int main(int argc, char* argv[])
     while (!phAudioFile->isEof())
     {
         long long iNumFrames = kBlockSize;
-        phAudioFile->readData(ppfAudioInput, iNumFrames);
+        phAudioFile->readData(ppfAudioData, iNumFrames);
         
         cout << "\r" << "reading and writing";
-        pcCombFilter->process(ppfAudioInput, ppfAudioInput, (int) iNumFrames);
-        phAudioOutputFile->writeData(ppfAudioInput, iNumFrames);
+        pcCombFilter->process(ppfAudioData, ppfAudioData, (int) iNumFrames);
+        phAudioOutputFile->writeData(ppfAudioData, iNumFrames);
     }
     
     
@@ -117,12 +124,12 @@ int main(int argc, char* argv[])
     CAudioFileIf::destroy(phAudioFile);
 
     for (int i = 0; i < stFileSpec.iNumChannels; i++) {
-        delete[] ppfAudioInput[i];
+        delete[] ppfAudioData[i];
     }
     
-    delete[] ppfAudioInput;
-    
-    ppfAudioInput = 0;
+    delete[] ppfAudioData;
+    ppfAudioData = 0;
+    // all done
     return 0;
 }
 
