@@ -64,12 +64,13 @@ Error_t CombFilter::setParamIntern(CCombFilterIf::FilterParam_t eParam, float fP
 Error_t CombFilter::processFIR(float **ppfInputBuffer, float **ppfOutputBuffer, int iNumberOfFrames) {
     for (int i = 0; i < iNumberOfFrames; i++)
     {
-        float y = 0;
         for (int c = 0; c < channels; c++)
         {
+            float y = 0;
             if ( delayIndex < delayInSamples) {
                 ppfDelay[c][delayIndex] = ppfInputBuffer[c][i];
                 y = ppfInputBuffer[c][i];
+                delayIndex+=1;
             }
             else
             {
@@ -80,8 +81,7 @@ Error_t CombFilter::processFIR(float **ppfInputBuffer, float **ppfOutputBuffer, 
                 ppfDelay[c][delayInSamples-1] = ppfInputBuffer[c][i];
                 y = ppfInputBuffer[c][i] + gain * (ppfDelay[c][0]);
             }
-            ppfInputBuffer[c][i] = y;
-            
+            ppfOutputBuffer[c][i] = y;
         }
     }
     return kNoError;
@@ -90,12 +90,13 @@ Error_t CombFilter::processFIR(float **ppfInputBuffer, float **ppfOutputBuffer, 
 Error_t CombFilter::processIIR(float **ppfInputBuffer, float **ppfOutputBuffer, int iNumberOfFrames) {
     for (int i = 0; i < iNumberOfFrames; i++)
     {
-        float y = 0;
         for (int c = 0; c < channels; c++)
         {
+            float y = 0;
             if ( delayIndex < delayInSamples) {
                 ppfDelay[c][delayIndex] = ppfInputBuffer[c][i];
                 y = ppfInputBuffer[c][i];
+                delayIndex+=1;
             }
             else
             {
@@ -106,8 +107,7 @@ Error_t CombFilter::processIIR(float **ppfInputBuffer, float **ppfOutputBuffer, 
                 ppfDelay[c][delayInSamples-1] = ppfInputBuffer[c][i];
                 y = ppfInputBuffer[c][i] +  gain * y + gain * (ppfDelay[c][0]) ;
             }
-            ppfInputBuffer[c][i] = y;
-            
+            ppfOutputBuffer[c][i] = y;
         }
     }
     return kNoError;
