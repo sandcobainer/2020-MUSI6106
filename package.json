@@ -39,6 +39,8 @@
   },
   "devDependencies": {},
   "scripts": {
+    "cdint" : "cd node_modules/gibber.server",
+    "start": "npm run cdint && node . 6000",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
