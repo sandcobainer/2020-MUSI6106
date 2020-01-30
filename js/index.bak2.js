@@ -10,7 +10,7 @@ Gibber.Communication = require( 'gibber.communication.lib' )( Gibber )
 module.exports = Gibber
 
 }()
-},{"gibber.audio.lib":41,"gibber.communication.lib":2,"gibber.core.lib":7,"gibber.graphics.lib":87,"gibber.interface.lib":94}],2:[function(require,module,exports){
+},{"gibber.audio.lib":42,"gibber.communication.lib":2,"gibber.core.lib":7,"gibber.graphics.lib":89,"gibber.interface.lib":96}],2:[function(require,module,exports){
 module.exports = function( Gibber ) {
   var Comm = {
     export: function( target ) {
@@ -713,13 +713,9 @@ var Gibber = {
     target.Pattern = Gibber.Pattern 
     target.Score = Gibber.Score
     target.Euclid = Gibber.Euclid
-
+    
     if( Gibber.Audio ) {
-      $.subscribe( 'audio.init', function( audio ) {
-        var __clear = Gibber.clear
-        audio.export( target )
-        Gibber.clear = __clear
-      })
+      Gibber.Audio.export( target )
     }
     
     if( Gibber.Graphics ) {
@@ -735,9 +731,7 @@ var Gibber = {
     }
   },
   
-  init: function( _options, __$ ) {
-      if( __$ !== undefined ) $ = __$
-
+  init: function( _options ) {                        
       if( typeof window === 'undefined' ) { // check for node.js
         window = GLOBAL // is this a good idea? makes a global window available in all files required in node
         document = GLOBAL.document = false
@@ -761,18 +755,10 @@ var Gibber = {
       Gibber.Pattern = Gibber.Pattern( Gibber )
       if( Gibber.Audio ) {
         var _export = Gibber.export.bind( Gibber )
-        var __clear__ = Gibber.clear
         $.extend( Gibber, Gibber.Audio )
-        Gibber.clear = __clear__
-
         Gibber.export = _export
-        //Gibber.Audio.export( Gibber )
-        var __save = options.callback
-        options.callback = function() {
-          //Gibber.Audio.export( Gibber )
-          if( __save !== null ) __save()
-        }
-        Gibber.Audio.init( options.callback, Gibber.dollar ) 
+        Gibber.Audio.export( Gibber )
+        Gibber.Audio.init( options.callback ) 
       
         //if( options.globalize ) {
           //options.target.Master = Gibber.Audio.Master    
@@ -813,7 +799,7 @@ var Gibber = {
     var _done = null
     console.log( 'Loading module ' + path + '...' )
 
-    if( path.indexOf( 'http:' ) === -1 ) { 
+    if( path.indexOf( 'https:' ) === -1 ) { 
       //console.log( 'loading via post', path )
       $.post(
         Gibber.Environment.SERVER_URL + '/gibber/'+path, {},
@@ -992,9 +978,7 @@ var Gibber = {
     var args = Array.prototype.slice.call( arguments, 0 )
     if( Gibber.Audio ) Gibber.Audio.clear.apply( Gibber.Audio, args );
     
-    if( Gibber.Graphics ) {
-      Gibber.Graphics.clear( Gibber.Graphics, args )
-    }
+    if( Gibber.Graphics ) Gibber.Graphics.clear( Gibber.Graphics, args )
 
     //Gibber.proxy( window, [ a ] )
     Gibber.proxy( window )
@@ -3085,12 +3069,12 @@ var soloGroup = [],
 /*
  * jquery.injectCSS.js - jquery css injection plugin
  * Copyright (C) 2013, Robert Kajic (robert@kajic.com)
- * http://kajic.com
+ * https://kajic.com
  *
  * https://github.com/kajic/jquery-injectCSS
  * Allows for injection of CSS defined as javascript JSS objects.
  *
- * Based on JSS (http://jss-lang.org/).
+ * Based on JSS (https://jss-lang.org/).
  *
  * Licensed under the MIT License.
  *
@@ -6643,7 +6627,7 @@ var MT = require( 'coreh-mousetrap' )(),
 
 var GE = {
   // REMEMBER TO CHECK WELCOME.INIT()
-  SERVER_URL : 'http://' + window.location.host,
+  SERVER_URL : 'https://' + window.location.host,
   CodeMirror:   require( 'codemirror' ),
   CodeMirrorJS: require( 'codemirror/mode/javascript/javascript' ),
   CodeMirrorC:  require( 'codemirror/mode/clike/clike' ),  
@@ -6663,8 +6647,15 @@ var GE = {
   Notation:     require( './notation' ),
   Gabber:       null, // required in init method
   isInitializing: true,
-
-  setupPubSub: function() {
+  
+  init : function() { 
+    GE.Keymap.init()
+    
+    $( '#layoutTable' ).attr( 'height', $( window ).height() )
+    $( '#contentCell' ).width( $( window ).width() )
+    
+    Gibber.proxy( window )
+    
     var events = {}
     $.subscribe   = function( key, fcn ) {
       if( typeof events[ key ] === 'undefined' ) {
@@ -6689,17 +6680,6 @@ var GE = {
         }
       }
     }
-
-  },
-  
-  init : function() { 
-    GE.Keymap.init()
-    
-    $( '#layoutTable' ).attr( 'height', $( window ).height() )
-    $( '#contentCell' ).width( $( window ).width() )
-    
-    Gibber.proxy( window )
-    
     
     if( !Gibber.isInstrument ) {
       GE.Storage.init() // load user preferences from localStorage before doing anything
@@ -6756,9 +6736,7 @@ var GE = {
       window.flash = GE.Message.postFlash
       window.post = GE.Message.post
 
-      Gibber.dollar.subscribe( 'audio.init', function() {
-        GE.Storage.runUserSetup()
-      })
+      GE.Storage.runUserSetup()
       
       GE.isInitializing = false
       
@@ -7324,7 +7302,7 @@ var GE = {
   
   Forum : {
     open : function() {
-      window.open( 'http://lurk.org/groups/gibber' )
+      window.open( 'https://lurk.org/groups/gibber' )
     },
   },
   
@@ -7419,7 +7397,7 @@ require( 'codemirror/addon/edit/closebrackets' )
 return GE
 }
 
-},{"./account":12,"./browser":13,"./chat":14,"./code_objects":15,"./console":17,"./docs":18,"./keymaps":21,"./keys":22,"./layout":23,"./notation":24,"./performance":25,"./preferences":27,"./share":28,"./theme":29,"codemirror":103,"codemirror/addon/comment/comment":100,"codemirror/addon/edit/closebrackets":101,"codemirror/addon/edit/matchbrackets":102,"codemirror/mode/clike/clike":104,"codemirror/mode/javascript/javascript":105,"coreh-mousetrap":36,"esprima":107}],21:[function(require,module,exports){
+},{"./account":12,"./browser":13,"./chat":14,"./code_objects":15,"./console":17,"./docs":18,"./keymaps":21,"./keys":22,"./layout":23,"./notation":24,"./performance":25,"./preferences":27,"./share":28,"./theme":29,"codemirror":105,"codemirror/addon/comment/comment":102,"codemirror/addon/edit/closebrackets":103,"codemirror/addon/edit/matchbrackets":104,"codemirror/mode/clike/clike":106,"codemirror/mode/javascript/javascript":107,"coreh-mousetrap":36,"esprima":109}],21:[function(require,module,exports){
 module.exports = function( Gibber ) {
   var GE, CodeMirror
   var $ = Gibber.dollar// require( './dollar' )
@@ -9023,7 +9001,7 @@ var Filters = module.exports = {
       phase: 0,
       targetCount: 88,
       integralPhaseCorrection:0,
-      sampleRateRatio: 1,//Gibber.Audio.Core.context.sampleRate / 44100, // mySampleRate / masterSampleRate... which is always 44100
+      sampleRateRatio: Gibber.Audio.Core.context.sampleRate / 44100, // mySampleRate / masterSampleRate... which is always 44100
       
       runningMean: Filters.RunningMean( 50 ),
       runningMeanLong: Filters.RunningMean( 250 ),
@@ -9517,13 +9495,10 @@ module.exports = function( Gibber ) {
 
   Gibber.Environment = require( './gibber/environment' )( Gibber )
 
-  Gibber.Environment.setupPubSub()
-
   Gibber.init()
 
   Gibber.Environment.init()
 }()
-
 },{"./external/injectCSS.js":11,"./gibber/dollar":19,"./gibber/environment":20,"gibber.lib":1}],31:[function(require,module,exports){
 /* MIT license */
 
@@ -9846,7 +9821,7 @@ function hsv2keyword(args) {
   return rgb2keyword(hsv2rgb(args));
 }
 
-// http://dev.w3.org/csswg/css-color/#hwb-to-rgb
+// https://dev.w3.org/csswg/css-color/#hwb-to-rgb
 function hwb2rgb(hwb) {
   var h = hwb[0] / 360,
       wh = hwb[1] / 100,
@@ -10866,7 +10841,7 @@ Color.prototype = {
    },
 
    luminosity: function() {
-      // http://www.w3.org/TR/WCAG20/#relativeluminancedef
+      // https://www.w3.org/TR/WCAG20/#relativeluminancedef
       var rgb = this.values.rgb;
       var lum = [];
       for (var i = 0; i < rgb.length; i++) {
@@ -10878,7 +10853,7 @@ Color.prototype = {
    },
 
    contrast: function(color2) {
-      // http://www.w3.org/TR/WCAG20/#contrast-ratiodef
+      // https://www.w3.org/TR/WCAG20/#contrast-ratiodef
       var lum1 = this.luminosity();
       var lum2 = color2.luminosity();
       if (lum1 > lum2) {
@@ -10897,7 +10872,7 @@ Color.prototype = {
    },
 
    dark: function() {
-      // YIQ equation from http://24ways.org/2010/calculating-color-contrast
+      // YIQ equation from https://24ways.org/2010/calculating-color-contrast
       var rgb = this.values.rgb,
           yiq = (rgb[0] * 299 + rgb[1] * 587 + rgb[2] * 114) / 1000;
    	return yiq < 128;
@@ -10954,7 +10929,7 @@ Color.prototype = {
 
    greyscale: function() {
       var rgb = this.values.rgb;
-      // http://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale
+      // https://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale
       var val = rgb[0] * 0.3 + rgb[1] * 0.59 + rgb[2] * 0.11;
       this.setValues("rgb", [val, val, val]);
       return this;
@@ -11129,7 +11104,7 @@ Color.prototype.setChannel = function(space, index, val) {
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -11676,7 +11651,7 @@ module.exports = function() {
     function _handleKeyEvent(e) {
 
         // normalize e.which for key events
-        // @see http://stackoverflow.com/questions/4285627/javascript-keycode-vs-charcode-utter-confusion
+        // @see https://stackoverflow.com/questions/4285627/javascript-keycode-vs-charcode-utter-confusion
         if (typeof e.which !== 'number') {
             e.which = e.keyCode;
         }
@@ -12074,14 +12049,14 @@ module.exports = function() {
 },{}],37:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.1.1
- * http://jquery.com/
+ * https://jquery.com/
  *
  * Includes Sizzle.js
- * http://sizzlejs.com/
+ * https://sizzlejs.com/
  *
  * Copyright 2005, 2014 jQuery Foundation, Inc. and other contributors
  * Released under the MIT license
- * http://jquery.org/license
+ * https://jquery.org/license
  *
  * Date: 2014-05-01T17:11Z
  */
@@ -12623,11 +12598,11 @@ function isArraylike( obj ) {
 var Sizzle =
 /*!
  * Sizzle CSS Selector Engine v1.10.19
- * http://sizzlejs.com/
+ * https://sizzlejs.com/
  *
  * Copyright 2013 jQuery Foundation, Inc. and other contributors
  * Released under the MIT license
- * http://jquery.org/license
+ * https://jquery.org/license
  *
  * Date: 2014-04-18
  */
@@ -12697,17 +12672,17 @@ var i,
 
 	// Regular expressions
 
-	// Whitespace characters http://www.w3.org/TR/css3-selectors/#whitespace
+	// Whitespace characters https://www.w3.org/TR/css3-selectors/#whitespace
 	whitespace = "[\\x20\\t\\r\\n\\f]",
-	// http://www.w3.org/TR/css3-syntax/#characters
+	// https://www.w3.org/TR/css3-syntax/#characters
 	characterEncoding = "(?:\\\\.|[\\w-]|[^\\x00-\\xa0])+",
 
 	// Loosely modeled on CSS identifier characters
-	// An unquoted value should be a CSS identifier http://www.w3.org/TR/css3-selectors/#attribute-selectors
-	// Proper syntax: http://www.w3.org/TR/CSS21/syndata.html#value-def-identifier
+	// An unquoted value should be a CSS identifier https://www.w3.org/TR/css3-selectors/#attribute-selectors
+	// Proper syntax: https://www.w3.org/TR/CSS21/syndata.html#value-def-identifier
 	identifier = characterEncoding.replace( "w", "w#" ),
 
-	// Attribute selectors: http://www.w3.org/TR/selectors/#attribute-selectors
+	// Attribute selectors: https://www.w3.org/TR/selectors/#attribute-selectors
 	attributes = "\\[" + whitespace + "*(" + characterEncoding + ")(?:" + whitespace +
 		// Operator (capture 2)
 		"*([*^$|!~]?=)" + whitespace +
@@ -12763,7 +12738,7 @@ var i,
 	rsibling = /[+~]/,
 	rescape = /'|\\/g,
 
-	// CSS escapes http://www.w3.org/TR/CSS21/syndata.html#escaped-characters
+	// CSS escapes https://www.w3.org/TR/CSS21/syndata.html#escaped-characters
 	runescape = new RegExp( "\\\\([\\da-f]{1,6}" + whitespace + "?|(" + whitespace + ")|.)", "ig" ),
 	funescape = function( _, escaped, escapedWhitespace ) {
 		var high = "0x" + escaped - 0x10000;
@@ -13232,7 +13207,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 	// We allow this because of a bug in IE8/9 that throws an error
 	// whenever `document.activeElement` is accessed on an iframe
 	// So, we allow :focus to pass through QSA all the time to avoid the IE error
-	// See http://bugs.jquery.com/ticket/13378
+	// See https://bugs.jquery.com/ticket/13378
 	rbuggyQSA = [];
 
 	if ( (support.qsa = rnative.test( doc.querySelectorAll )) ) {
@@ -13243,13 +13218,13 @@ setDocument = Sizzle.setDocument = function( node ) {
 			// This is to test IE's treatment of not explicitly
 			// setting a boolean content attribute,
 			// since its presence should be enough
-			// http://bugs.jquery.com/ticket/12359
+			// https://bugs.jquery.com/ticket/12359
 			div.innerHTML = "<select msallowclip=''><option selected=''></option></select>";
 
 			// Support: IE8, Opera 11-12.16
 			// Nothing should be selected when empty strings follow ^= or $= or *=
 			// The test attribute must be unknown in Opera but "safe" for WinRT
-			// http://msdn.microsoft.com/en-us/library/ie/hh465388.aspx#attribute_section
+			// https://msdn.microsoft.com/en-us/library/ie/hh465388.aspx#attribute_section
 			if ( div.querySelectorAll("[msallowclip^='']").length ) {
 				rbuggyQSA.push( "[*^$]=" + whitespace + "*(?:''|\"\")" );
 			}
@@ -13261,7 +13236,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 			}
 
 			// Webkit/Opera - :checked should return selected option elements
-			// http://www.w3.org/TR/2011/REC-css3-selectors-20110929/#checked
+			// https://www.w3.org/TR/2011/REC-css3-selectors-20110929/#checked
 			// IE8 throws error here and will not see later tests
 			if ( !div.querySelectorAll(":checked").length ) {
 				rbuggyQSA.push(":checked");
@@ -13810,7 +13785,7 @@ Expr = Sizzle.selectors = {
 
 		"PSEUDO": function( pseudo, argument ) {
 			// pseudo-class names are case-insensitive
-			// http://www.w3.org/TR/selectors/#pseudo-classes
+			// https://www.w3.org/TR/selectors/#pseudo-classes
 			// Prioritize by case sensitivity in case custom pseudos are added with uppercase letters
 			// Remember that setFilters inherits from pseudos
 			var args,
@@ -13894,7 +13869,7 @@ Expr = Sizzle.selectors = {
 		// or beginning with the identifier C immediately followed by "-".
 		// The matching of C against the element's language value is performed case-insensitively.
 		// The identifier C does not have to be a valid language name."
-		// http://www.w3.org/TR/selectors/#lang-pseudo
+		// https://www.w3.org/TR/selectors/#lang-pseudo
 		"lang": markFunction( function( lang ) {
 			// lang value must be a valid identifier
 			if ( !ridentifier.test(lang || "") ) {
@@ -13941,7 +13916,7 @@ Expr = Sizzle.selectors = {
 
 		"checked": function( elem ) {
 			// In CSS3, :checked should return both checked and selected elements
-			// http://www.w3.org/TR/2011/REC-css3-selectors-20110929/#checked
+			// https://www.w3.org/TR/2011/REC-css3-selectors-20110929/#checked
 			var nodeName = elem.nodeName.toLowerCase();
 			return (nodeName === "input" && !!elem.checked) || (nodeName === "option" && !!elem.selected);
 		},
@@ -13958,7 +13933,7 @@ Expr = Sizzle.selectors = {
 
 		// Contents
 		"empty": function( elem ) {
-			// http://www.w3.org/TR/selectors/#empty-pseudo
+			// https://www.w3.org/TR/selectors/#empty-pseudo
 			// :empty is negated by element (1) or content nodes (text: 3; cdata: 4; entity ref: 5),
 			//   but not by others (comment: 8; processing instruction: 7; etc.)
 			// nodeType < 6 works because attributes (2) do not appear as children
@@ -14611,7 +14586,7 @@ support.sortDetached = assert(function( div1 ) {
 
 // Support: IE<8
 // Prevent attribute/property "interpolation"
-// http://msdn.microsoft.com/en-us/library/ms536429%28VS.85%29.aspx
+// https://msdn.microsoft.com/en-us/library/ms536429%28VS.85%29.aspx
 if ( !assert(function( div ) {
 	div.innerHTML = "<a href='#'></a>";
 	return div.firstChild.getAttribute("href") === "#" ;
@@ -15488,7 +15463,7 @@ jQuery.ready.promise = function( obj ) {
 
 		// Catch cases where $(document).ready() is called after the browser event has already occurred.
 		// we once tried to use readyState "interactive" here, but it caused issues like the one
-		// discovered by ChrisS here: http://bugs.jquery.com/ticket/12282#comment:15
+		// discovered by ChrisS here: https://bugs.jquery.com/ticket/12282#comment:15
 		if ( document.readyState === "complete" ) {
 			// Handle it asynchronously to allow scripts the opportunity to delay ready
 			setTimeout( jQuery.ready );
@@ -16751,7 +16726,7 @@ jQuery.Event = function( src, props ) {
 };
 
 // jQuery.Event is based on DOM3 Events as specified by the ECMAScript Language Binding
-// http://www.w3.org/TR/2003/WD-DOM-Level-3-Events-20030331/ecma-script-binding.html
+// https://www.w3.org/TR/2003/WD-DOM-Level-3-Events-20030331/ecma-script-binding.html
 jQuery.Event.prototype = {
 	isDefaultPrevented: returnFalse,
 	isPropagationStopped: returnFalse,
@@ -17098,7 +17073,7 @@ jQuery.extend({
 		if ( !support.noCloneChecked && ( elem.nodeType === 1 || elem.nodeType === 11 ) &&
 				!jQuery.isXMLDoc( elem ) ) {
 
-			// We eschew Sizzle here for performance reasons: http://jsperf.com/getall-vs-sizzle/2
+			// We eschew Sizzle here for performance reasons: https://jsperf.com/getall-vs-sizzle/2
 			destElements = getAll( clone );
 			srcElements = getAll( elem );
 
@@ -17614,7 +17589,7 @@ function curCSS( elem, name, computed ) {
 		// Support: iOS < 6
 		// A tribute to the "awesome hack by Dean Edwards"
 		// iOS < 6 (at least) returns percentage for a larger set of values, but width seems to be reliably pixels
-		// this is against the CSSOM draft spec: http://dev.w3.org/csswg/cssom/#resolved-values
+		// this is against the CSSOM draft spec: https://dev.w3.org/csswg/cssom/#resolved-values
 		if ( rnumnonpx.test( ret ) && rmargin.test( name ) ) {
 
 			// Remember the original values
@@ -18939,7 +18914,7 @@ jQuery.fx.speeds = {
 
 
 // Based off of the plugin by Clint Helfers, with permission.
-// http://blindsignals.com/index.php/2009/07/jquery-delay/
+// https://blindsignals.com/index.php/2009/07/jquery-delay/
 jQuery.fn.delay = function( time, type ) {
 	time = jQuery.fx ? jQuery.fx.speeds[ time ] || time : time;
 	type = type || "fx";
@@ -20101,8 +20076,8 @@ jQuery.extend({
 			parts = rurl.exec( s.url.toLowerCase() );
 			s.crossDomain = !!( parts &&
 				( parts[ 1 ] !== ajaxLocParts[ 1 ] || parts[ 2 ] !== ajaxLocParts[ 2 ] ||
-					( parts[ 3 ] || ( parts[ 1 ] === "http:" ? "80" : "443" ) ) !==
-						( ajaxLocParts[ 3 ] || ( ajaxLocParts[ 1 ] === "http:" ? "80" : "443" ) ) )
+					( parts[ 3 ] || ( parts[ 1 ] === "https:" ? "80" : "443" ) ) !==
+						( ajaxLocParts[ 3 ] || ( ajaxLocParts[ 1 ] === "https:" ? "80" : "443" ) ) )
 			);
 		}
 
@@ -23018,7 +22993,7 @@ param **pan** Number. The position in the stereo spectrum of the signal.
 };
 
 /**#Gibberish.Saw3 - Oscillator
-A bandlimited saw wave created using FM feedback, see http://scp.web.elte.hu/papers/synthesis1.pdf.  
+A bandlimited saw wave created using FM feedback, see https://scp.web.elte.hu/papers/synthesis1.pdf.  
   
 ## Example Usage##
 `// make a saw wave  
@@ -23114,7 +23089,7 @@ param **amp** Number. The amplitude to be used to calculate output.
 Gibberish.Saw3.prototype = Gibberish._oscillator;
 
 /**#Gibberish.PWM - Oscillator
-A bandlimited pulsewidth modulation wave created using FM feedback, see http://scp.web.elte.hu/papers/synthesis1.pdf.
+A bandlimited pulsewidth modulation wave created using FM feedback, see https://scp.web.elte.hu/papers/synthesis1.pdf.
   
 ## Example Usage##
 `// make a pwm wave  
@@ -23681,7 +23656,7 @@ Gibberish.Ease = function( start, end, time, easein, loops ) {
 Gibberish.Ease.prototype = Gibberish._envelope;
 
 // quadratic bezier
-// adapted from http://www.flong.com/texts/code/shapers_bez/
+// adapted from https://www.flong.com/texts/code/shapers_bez/
 Gibberish.Curve = function( start, end, time, a, b, fadeIn, loops ) {
   var sqrt = Math.sqrt, 
       out = 0,
@@ -24397,7 +24372,7 @@ Gibberish.Delay = function() {
 Gibberish.Delay.prototype = Gibberish._effect;
 
 /**#Gibberish.Decimator - FX
-A bit-crusher / sample rate reducer. Adapted from code / comments at http://musicdsp.org/showArchiveComment.php?ArchiveID=124
+A bit-crusher / sample rate reducer. Adapted from code / comments at https://musicdsp.org/showArchiveComment.php?ArchiveID=124
 
 ## Example Usage##
 `a = new Gibberish.Synth({ attack:44, decay:44100 });  
@@ -24693,7 +24668,7 @@ Remove OnePole from assigned ugen property. This will effectively remove the fil
 Gibberish.OnePole.prototype = Gibberish._effect;
 
 /**#Gibberish.Filter24 - FX
-A four pole ladder filter. Adapted from Arif Ove Karlsne's 24dB ladder approximation: http://musicdsp.org/showArchiveComment.php?ArchiveID=141.
+A four pole ladder filter. Adapted from Arif Ove Karlsne's 24dB ladder approximation: https://musicdsp.org/showArchiveComment.php?ArchiveID=141.
 
 ## Example Usage##
 `a = new Gibberish.Synth({ attack:44, decay:44100 });  
@@ -28739,7 +28714,7 @@ Gibberish.Clap = function() {
 }
 Gibberish.Clap.prototype = Gibberish._oscillator;
 
-// http://www.soundonsound.com/sos/Sep02/articles/synthsecrets09.asp
+// https://www.soundonsound.com/sos/Sep02/articles/synthsecrets09.asp
 Gibberish.Cowbell = function() {
   var _s1 = new Gibberish.Square(),
       _s2 = new Gibberish.Square(),
@@ -28813,7 +28788,7 @@ Gibberish.Snare = function() {
   			out = noiseHPF( out, cutoff + tune * 1000, .5, 1, sr );
   			out *= snappy;
         
-        // rectify as per instructions found here: http://ericarcher.net/devices/tr808-clone/
+        // rectify as per instructions found here: https://ericarcher.net/devices/tr808-clone/
         out = out > 0 ? out : 0;
         
   			envOut = env;
@@ -28887,7 +28862,7 @@ Gibberish.Hat = function() {
       		
   		val  *= eg(.001, decay);
       
-      // rectify as per instructions found here: http://ericarcher.net/devices/tr808-clone/
+      // rectify as per instructions found here: https://ericarcher.net/devices/tr808-clone/
       // val = val > 0 ? val : 0;
         		
   		//sample, cutoff, resonance, isLowPass, channels
@@ -29112,18 +29087,7 @@ Gibberish.Hat.prototype = Gibberish._oscillator;
       }.bind( this ),
       
       note: function( name, velocity, cents ) {
-        if( typeof name === 'string' ) name[0] = name[0].toUpperCase()
-	if( name.indexOf( 'E#' ) > -1 ) name = 'F' + name[2]
-	if( name.indexOf('#') > -1 ) {
-          var split = name.split('#')
-          var char = String.fromCharCode( name[0].charCodeAt(0) + 1 )
-	  name = char + 'b' + split[1]
-
-	}
-
-	if( name.indexOf( 'Cb' ) > -1 ) name = 'B' + name[2]
-	if( name.indexOf( 'Fb' ) > -1 ) name = 'E' + name[2]
-        if( this.isLoaded && name !== null && this.buffers[ name ] !== undefined ) {
+        if( this.isLoaded ) {
           this.playing.push({
             buffer:this.buffers[ name ],
             phase:0,
@@ -29131,10 +29095,7 @@ Gibberish.Hat.prototype = Gibberish._oscillator;
             length:this.buffers[ name ].length,
             velocity: isNaN( velocity ) ? 1 : velocity
           })
-        }else if( this.isLoaded ){
-          console.log( 'not found:', name, this.buffers )
-	}
-	  
+        }
       },
       interpolate: Gibberish.interpolate.bind( this ),
       panner: Gibberish.makePanner()
@@ -29253,6 +29214,156 @@ return Gibberish;
 })
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],39:[function(require,module,exports){
+/*
+ * Freesound Javascript SDK
+ */
+!function() { 
+
+var freesound = module.exports = {
+    BASE_URI : "http://www.freesound.org/api",
+    apiKey : '',
+    debug: false,
+    _URI_SOUND : '/sounds/<sound_id>/',
+    _URI_SOUND_ANALYSIS : '/sounds/<sound_id>/analysis/',
+    _URI_SOUND_ANALYSIS_FILTER :'/sounds/<sound_id>/analysis/<filter>',
+    _URI_SIMILAR_SOUNDS : '/sounds/<sound_id>/similar/',
+    _URI_SEARCH : '/sounds/search/',
+    _URI_CONTENT_SEARCH : '/sounds/content_search/',
+    _URI_GEOTAG : '/sounds/geotag',
+    _URI_USER : '/people/<user_name>/',
+    _URI_USER_SOUNDS : '/people/<user_name>/sounds/',
+    _URI_USER_PACKS : '/people/<user_name>/packs/',
+    _URI_USER_BOOKMARKS : '/people/<username>/bookmark_categories',
+    _URI_BOOKMARK_CATEGORY_SOUNDS : '/people/<username>/bookmark_categories/<category_id>/sounds',
+    _URI_PACK : '/packs/<pack_id>/',
+    _URI_PACK_SOUNDS : '/packs/<pack_id>/sounds/',
+
+    _make_uri : function(uri,args){
+        for (var a in args) {uri = uri.replace(/<[\w_]+>/, args[a]);}
+        return this.BASE_URI+uri;
+    },
+    _make_request : function(uri,success,error,params,wrapper){
+        var fs = this;
+
+        if(uri.indexOf('?') == -1){ uri = uri+"?"; }
+        uri = uri+"&api_key="+this.apiKey;
+        for(var p in params){uri = uri+"&"+p+"="+params[p];}
+        var xhr;
+        try {xhr = new XMLHttpRequest();}
+        catch (e) {xhr = new ActiveXObject('Microsoft.XMLHTTP');}
+        xhr.onreadystatechange = function(){
+            if (xhr.readyState == 4 && xhr.status == 200){
+                var data = eval("(" + xhr.responseText + ")");
+                success(wrapper?wrapper(data):data);
+            }
+            else if (xhr.readyState == 4 && xhr.status != 200){
+                error();
+            }
+        };
+        if(freesound.debug) console.log(uri);
+        xhr.open('GET', uri);
+        xhr.send(null);
+    },
+    _make_sound_object: function(snd){ // receives json object already "parsed" (via eval)
+        snd.get_analysis = function(showAll, filter, success, error){
+            var params = {all: showAll?1:0};
+            var base_uri = filter? freesound._URI_SOUND_ANALYSIS_FILTER:freesound._URI_SOUND_ANALYSIS;
+            freesound._make_request(freesound._make_uri(base_uri,[snd.id,filter?filter:""]),success,error);
+        };
+        snd.get_similar_sounds = function(success, error){
+            freesound._make_request(
+                freesound._make_uri(freesound._URI_SIMILAR_SOUNDS,[snd.id]),success,error,{},this._make_sound_collection_object);
+        };
+        return snd;
+    },
+    _make_sound_collection_object: function(col){
+        var get_next_or_prev = function(which,success,error){
+            freesound._make_request(which,success,error,{},this._make_sound_collection_object);
+        };
+        col.next_page = function(success,error){get_next_or_prev(this.next,success,error);};
+        col.previous_page = function(success,error){get_next_or_prev(this.previous,success,error);};
+        return col;
+    },
+    _make_user_object: function(user){ // receives json object already "parsed" (via eval)
+        user.get_sounds = function(success, error){
+            freesound._make_request(freesound._make_uri(freesound._URI_USER_SOUNDS,[user.username]),success,error,{},this._make_sound_collection_object);
+        };
+        user.get_packs = function(success, error){
+            freesound._make_request(freesound._make_uri(freesound._URI_USER_PACKS,[user.username]),success,error,{},this._make_pack_collection_object);
+        };
+        user.get_bookmark_categories = function(success, error){
+            freesound._make_request(freesound._make_uri(freesound._URI_USER_BOOKMARKS,[user.username]),success,error);
+        };
+        user.get_bookmark_category_sounds = function(ref, success, error){
+            freesound._make_request(ref,success,error);
+        };
+        return user;
+    },
+    _make_pack_object: function(pack){ // receives json object already "parsed" (via eval)
+        pack.get_sounds = function(success, error){
+            freesound._make_request(freesound._make_uri(freesound._URI_PACK_SOUNDS,[pack.id]),success,error,{},this._make_sound_collection_object);
+        };
+        return pack;
+    },
+    _make_pack_collection_object: function(col){
+        var get_next_or_prev = function(which,success,error){
+            freesound._make_request(which,success,error,{},this._make_pack_collection_object);
+        };
+        col.next_page = function(success,error){get_next_or_prev(this.next,success,error);};
+        col.previous_page = function(success,error){get_next_or_prev(this.previous,success,error);};
+        return col;
+    },
+    /************* "Public" interface *****************/
+    get_from_ref : function(ref, success,error){
+        this._make_request(ref,success,error,{});
+    },
+    get_sound : function(soundId, success,error){
+        this._make_request(this._make_uri(this._URI_SOUND,[soundId]),success,error,{},this._make_sound_object);
+    },
+    get_user : function(username, success,error){
+        this._make_request(this._make_uri(this._URI_USER,[username]),success,error,{},this._make_user_object);
+    },
+    get_pack : function(packId, success,error){
+        this._make_request(this._make_uri(this._URI_PACK,[packId]),success,error,{},this._make_pack_object);
+    },
+    quick_search : function(query,success,error){
+        this.search(query,0,null,null,success,error);
+    },
+    search: function(query, page, filter, sort, num_results, fields, sounds_per_page, success, error){
+        var params = {q:(query ? query : " ")};
+        if(page)params.p=page;
+        if(filter)params.f = filter;
+        if(sort)params.s = sort;
+        if(num_results)params.num_results = num_results;
+        if(sounds_per_page)params.sounds_per_page = sounds_per_page;
+        if(fields)params.fields = fields;
+        this._make_request(this._make_uri(this._URI_SEARCH), success,error,params, this._make_sound_collection_object);
+    },
+    content_based_search: function(target, filter, max_results, fields, page, sounds_per_page, success, error){
+        var params = {};
+        if(page)params.p=page;
+        if(filter)params.f = filter;
+        if(target)params.t = target;
+        if(max_results)params.max_results = max_results;
+        if(sounds_per_page)params.sounds_per_page = sounds_per_page;
+        if(fields)params.fields = fields;
+        this._make_request(this._make_uri(this._URI_CONTENT_SEARCH), success,error,params, this._make_sound_collection_object);
+    },
+    geotag: function(min_lat, max_lat, min_lon, max_lon, page, fields, sounds_per_page, success, error){
+        var params = {};
+        if(min_lat)params.min_lat=min_lat;
+        if(max_lat)params.max_lat=max_lat;
+        if(min_lon)params.min_lon=min_lon;
+        if(max_lon)params.max_lon=max_lon;
+        if(page)params.p=page;
+        if(sounds_per_page)params.sounds_per_page = sounds_per_page;
+        if(fields)params.fields = fields;
+        this._make_request(this._make_uri(this._URI_GEOTAG), success,error,params, this._make_sound_collection_object);
+    }
+};
+
+}()
+},{}],40:[function(require,module,exports){
 (function () {
 
     var freesound = function () {        
@@ -29262,7 +29373,7 @@ return Gibberish;
         var host = 'freesound.org';
 
         var uris = {
-            base : 'http://'+host+'/apiv2',
+            base : 'https://'+host+'/apiv2',
             textSearch : '/search/text/',
             contentSearch: '/search/content/',
             combinedSearch : '/sounds/search/combined/',
@@ -29317,15 +29428,14 @@ return Gibberish;
                 var http = require("http");
                 var options = {
                     host: host,
-                    path: uri.substring(uri.indexOf("/",8),uri.length), // first '/' after 'http://'
-                    port: '443',
+                    path: uri.substring(uri.indexOf("/",8),uri.length), // first '/' after 'https://'
+                    port: '80',
                     method: method,
                     headers: {'Authorization': authHeader},
                     withCredentials:false,
                 };
-                console.log( 'http options:', options )
                 var req = http.request(options,function(res){
-                    res.setEncoding('utf8');            
+                    //res.setEncoding('utf8');            
                     res.on('data', function (data){ 
                         if([200,201,202].indexOf(res.statusCode)>=0)
                             success(wrapper?wrapper(data):data);
@@ -29349,7 +29459,6 @@ return Gibberish;
                         if(error) error(xhr.statusText);
                     }
                 };
-                console.log( method, uri )
                 xhr.open(method, uri);
                 xhr.setRequestHeader('Authorization',authHeader);
                 if(content_type!==undefined)
@@ -29606,9 +29715,9 @@ return Gibberish;
     else {this.freesound = freesound(); }
 }());
 
-},{"http":130}],40:[function(require,module,exports){
+},{"http":132}],41:[function(require,module,exports){
 (function(){function t(t,e){return t=r[t],e=r[e],t.distance>e.distance?e.distance+12-t.distance:e.distance-t.distance}function e(t,e,i){for(;i>0;i--)t+=e;return t}function i(t,e){if("string"!=typeof t)return null;this.name=t,this.duration=e||4,this.accidental={value:0,sign:""};var i=t.match(/^([abcdefgh])(x|#|bb|b?)(-?\d*)/i);if(i&&t===i[0]&&0!==i[3].length)this.name=i[1].toLowerCase(),this.octave=parseFloat(i[3]),0!==i[2].length&&(this.accidental.sign=i[2].toLowerCase(),this.accidental.value=y[i[2]]);else{t=t.replace(/\u2032/g,"'").replace(/\u0375/g,",");var n=t.match(/^(,*)([abcdefgh])(x|#|bb|b?)([,\']*)$/i);if(!n||5!==n.length||t!==n[0])throw Error("Invalid note format");if(""===n[1]&&""===n[4])this.octave=n[2]===n[2].toLowerCase()?3:2;else if(""!==n[1]&&""===n[4]){if(n[2]===n[2].toLowerCase())throw Error("Invalid note format. Format must respect the Helmholtz notation.");this.octave=2-n[1].length}else{if(""!==n[1]||""===n[4])throw Error("Invalid note format");if(n[4].match(/^'+$/)){if(n[2]===n[2].toUpperCase())throw Error("Invalid note format. Format must respect the Helmholtz notation");this.octave=3+n[4].length}else{if(!n[4].match(/^,+$/))throw Error("Invalid characters after note name.");if(n[2]===n[2].toLowerCase())throw Error("Invalid note format. Format must respect the Helmholtz notation");this.octave=2-n[4].length}}this.name=n[2].toLowerCase(),0!==n[3].length&&(this.accidental.sign=n[3].toLowerCase(),this.accidental.value=y[n[3]])}}function n(t,e){if(!(t instanceof i))return null;e=e||"",this.name=t.name.toUpperCase()+t.accidental.sign+e,this.root=t,this.notes=[t],this.quality="major",this.type="major";var n,r,o,s,h,m=[],u=!1,c="quality",d=!1,p=!1,v=null;for(s=0,h=e.length;h>s;s++){for(n=e[s];" "===n||"("===n||")"===n;)n=e[++s];if(!n)break;if(r=n.charCodeAt(0),o=h>=s+3?e.substr(s,3):"","quality"===c)"M"===n||("maj"===o||916===r?(this.type="major",m.push("M7"),u=!0,(e[s+3]&&"7"===e[s+3]||916===r&&"7"===e[s+1])&&s++):"m"===n||"-"===n||"min"===o?this.quality=this.type="minor":111===r||176===r||"dim"===o?(this.quality="minor",this.type="diminished"):"+"===n||"aug"===o?(this.quality="major",this.type="augmented"):216===r||248===r?(this.quality="minor",this.type="diminished",m.push("m7"),u=!0):"sus"===o?(this.quality="sus",this.type=e[s+3]&&"2"===e[s+3]?"sus2":"sus4"):"5"===n?(this.quality="power",this.type="power"):s-=1),o in l&&(s+=2),c="";else if("#"===n)d=!0;else if("b"===n)p=!0;else if("5"===n)d?(v="A5","major"===this.quality&&(this.type="augmented")):p&&(v="d5","minor"===this.quality&&(this.type="diminished")),p=d=!1;else if("6"===n)m.push("M6"),p=d=!1;else if("7"===n)"diminished"===this.type?m.push("d7"):m.push("m7"),u=!0,p=d=!1;else if("9"===n)u||m.push("m7"),p?m.push("m9"):d?m.push("A9"):m.push("M9"),p=d=!1;else{if("1"!==n)throw Error("Unexpected character: '"+n+"' in chord name");n=e[++s],"1"===n?p?m.push("d11"):d?m.push("A11"):m.push("P11"):"3"===n&&(p?m.push("m13"):d?m.push("A13"):m.push("M13")),p=d=!1}}for(var y=0,g=f[this.type].length;g>y;y++)"5"===f[this.type][y][1]&&v?this.notes.push(a.interval(this.root,v)):this.notes.push(a.interval(this.root,f[this.type][y]));for(y=0,g=m.length;g>y;y++)this.notes.push(a.interval(this.root,m[y]))}var a={},r={c:{name:"c",distance:0,index:0},d:{name:"d",distance:2,index:1},e:{name:"e",distance:4,index:2},f:{name:"f",distance:5,index:3},g:{name:"g",distance:7,index:4},a:{name:"a",distance:9,index:5},b:{name:"b",distance:11,index:6},h:{name:"h",distance:11,index:6}},o=["c","d","e","f","g","a","b"],s={.25:"longa",.5:"breve",1:"whole",2:"half",4:"quarter",8:"eighth",16:"sixteenth",32:"thirty-second",64:"sixty-fourth",128:"hundred-twenty-eighth"},h=[{name:"unison",quality:"perfect",size:0},{name:"second",quality:"minor",size:1},{name:"third",quality:"minor",size:3},{name:"fourth",quality:"perfect",size:5},{name:"fifth",quality:"perfect",size:7},{name:"sixth",quality:"minor",size:8},{name:"seventh",quality:"minor",size:10},{name:"octave",quality:"perfect",size:12},{name:"ninth",quality:"minor",size:13},{name:"tenth",quality:"minor",size:15},{name:"eleventh",quality:"perfect",size:17},{name:"twelfth",quality:"perfect",size:19},{name:"thirteenth",quality:"minor",size:20},{name:"fourteenth",quality:"minor",size:22},{name:"fifteenth",quality:"perfect",size:24}],m={unison:0,second:1,third:2,fourth:3,fifth:4,sixth:5,seventh:6,octave:7,ninth:8,tenth:9,eleventh:10,twelfth:11,thirteenth:12,fourteenth:13,fifteenth:14},l={P:"perfect",M:"major",m:"minor",A:"augmented",d:"diminished",perf:"perfect",maj:"major",min:"minor",aug:"augmented",dim:"diminished"},u={perfect:"P",major:"M",minor:"m",augmented:"A",diminished:"d"},c={P:"P",M:"m",m:"M",A:"d",d:"A"},d={perfect:["diminished","perfect","augmented"],minor:["diminished","minor","major","augmented"]},f={major:["M3","P5"],minor:["m3","P5"],augmented:["M3","A5"],diminished:["m3","d5"],sus2:["M2","P5"],sus4:["P4","P5"],power:["P5"]},p={major:"M",minor:"m",augmented:"aug",diminished:"dim",power:"5"},v={"-2":"bb","-1":"b",0:"",1:"#",2:"x"},y={bb:-2,b:-1,"#":1,x:2};i.prototype={key:function(t){return t?7*(this.octave-1)+3+Math.ceil(r[this.name].distance/2):12*(this.octave-1)+4+r[this.name].distance+this.accidental.value},fq:function(t){return t=t||440,t*Math.pow(2,(this.key()-49)/12)},scale:function(t,e){return a.scale.list(this,t,e)},interval:function(t,e){return a.interval(this,t,e)},chord:function(t){return t=t||"major",t in p&&(t=p[t]),new n(this,t)},helmholtz:function(){var t,i=3>this.octave?this.name.toUpperCase():this.name.toLowerCase();return 2>=this.octave?(t=e("",",",2-this.octave),t+i+this.accidental.sign):(t=e("","'",this.octave-3),i+this.accidental.sign+t)},scientific:function(){return this.name.toUpperCase()+this.accidental.sign+("number"==typeof this.octave?this.octave:"")},enharmonics:function(){var t=[],e=this.key(),i=this.interval("m2","up"),n=this.interval("m2","down"),a=i.key()-i.accidental.value,r=n.key()-n.accidental.value,o=e-a;return 3>o&&o>-3&&(i.accidental={value:o,sign:v[o]},t.push(i)),o=e-r,3>o&&o>-3&&(n.accidental={value:o,sign:v[o]},t.push(n)),t},valueName:function(){return s[this.duration]},toString:function(t){return t="boolean"==typeof t?t:"number"==typeof this.octave?!1:!0,this.name.toLowerCase()+this.accidental.sign+(t?"":this.octave)}},n.prototype.dominant=function(t){return t=t||"",new n(this.root.interval("P5"),t)},n.prototype.subdominant=function(t){return t=t||"",new n(this.root.interval("P4"),t)},n.prototype.parallel=function(t){if(t=t||"","triad"!==this.chordType()||"diminished"===this.quality||"augmented"===this.quality)throw Error("Only major/minor triads have parallel chords");return"major"===this.quality?new n(this.root.interval("m3","down"),"m"):new n(this.root.interval("m3","up"))},n.prototype.chordType=function(){var t,e,i;if(2===this.notes.length)return"dyad";if(3===this.notes.length){e={unison:!1,third:!1,fifth:!1};for(var n=0,r=this.notes.length;r>n;n++)t=this.root.interval(this.notes[n]),i=h[parseFloat(a.interval.invert(t.simple)[1])-1],t.name in e?e[t.name]=!0:i.name in e&&(e[i.name]=!0);return e.unison&&e.third&&e.fifth?"triad":"trichord"}if(4===this.notes.length){e={unison:!1,third:!1,fifth:!1,seventh:!1};for(var n=0,r=this.notes.length;r>n;n++)t=this.root.interval(this.notes[n]),i=h[parseFloat(a.interval.invert(t.simple)[1])-1],t.name in e?e[t.name]=!0:i.name in e&&(e[i.name]=!0);if(e.unison&&e.third&&e.fifth&&e.seventh)return"tetrad"}return"unknown"},n.prototype.toString=function(){return this.name},a.note=function(t,e){return new i(t,e)},a.note.fromKey=function(t){var e=440*Math.pow(2,(t-49)/12);return a.frequency.note(e).note},a.chord=function(t){var e;if(e=t.match(/^([abcdefgh])(x|#|bb|b?)/i),e&&e[0])return new n(new i(e[0].toLowerCase()),t.substr(e[0].length));throw Error("Invalid Chord. Couldn't find note name")},a.frequency={note:function(t,e){e=e||440;var n,a,s,h,m,l,u;return n=Math.round(49+12*((Math.log(t)-Math.log(e))/Math.log(2))),u=e*Math.pow(2,(n-49)/12),l=1200*(Math.log(t/u)/Math.log(2)),a=Math.floor((n-4)/12),s=n-12*a-4,h=r[o[Math.round(s/2)]],m=h.name,s>h.distance?m+="#":h.distance>s&&(m+="b"),{note:new i(m+(a+1)),cents:l}}},a.interval=function(t,e,n){if("string"==typeof e){"down"===n&&(e=a.interval.invert(e));var r=l[e[0]],o=parseFloat(e.substr(1));if(!r||isNaN(o)||1>o)throw Error("Invalid string-interval format");return a.interval.from(t,{quality:r,interval:h[o-1].name},n)}if(e instanceof i&&t instanceof i)return a.interval.between(t,e);throw Error("Invalid parameters")},a.interval.from=function(e,n,a){n.direction=a||n.direction||"up";var s,l,u,c,f,p;if(f=m[n.interval],p=h[f],f>7&&(f-=7),f=r[e.name].index+f,f>o.length-1&&(f-=o.length),s=o[f],-1===d[p.quality].indexOf(n.quality)||-1===d[p.quality].indexOf(p.quality))throw Error("Invalid interval quality");return l=d[p.quality].indexOf(n.quality)-d[p.quality].indexOf(p.quality),u=p.size+l-t(e.name,s),e.octave&&(c=Math.floor((e.key()-e.accidental.value+t(e.name,s)-4)/12)+1+Math.floor(m[n.interval]/7)),u+=e.accidental.value,u>=11&&(u-=12),u>-3&&3>u&&(s+=v[u]),"down"===a&&c--,new i(s+(c||""))},a.interval.between=function(t,e){var i,n,a,o,s,m,l=t.key(),c=e.key();if(i=c-l,i>24||-25>i)throw Error("Too big interval. Highest interval is a augmented fifteenth (25 semitones)");return 0>i&&(o=t,t=e,e=o),a=r[e.name].index-r[t.name].index+7*(e.octave-t.octave),n=h[a],m=d[n.quality][Math.abs(i)-n.size+1],s=u[m]+(""+Number(a+1)),{name:n.name,quality:m,direction:i>0?"up":"down",simple:s}},a.interval.invert=function(t){if(2!==t.length&&3!==t.length)return!1;var e=c[t[0]],i=2===t.length?parseFloat(t[1]):parseFloat(t.substr(1));return i>8&&(i-=7),8!==i&&1!==i&&(i=9-i),e+(""+i)},a.scale={list:function(t,e,n){var r,o,s=[],h=[];if(!(t instanceof i))return!1;if("string"==typeof e&&(e=a.scale.scales[e],!e))return!1;for(s.push(t),n&&h.push(t.name+(t.accidental.sign||"")),r=0,o=e.length;o>r;r++)s.push(a.interval(t,e[r])),n&&h.push(s[r+1].name+(s[r+1].accidental.sign||""));return n?h:s},scales:{major:["M2","M3","P4","P5","M6","M7"],ionian:["M2","M3","P4","P5","M6","M7"],dorian:["M2","m3","P4","P5","M6","m7"],phrygian:["m2","m3","P4","P5","m6","m7"],lydian:["M2","M3","A4","P5","M6","M7"],mixolydian:["M2","M3","P4","P5","M6","m7"],minor:["M2","m3","P4","P5","m6","m7"],aeolian:["M2","m3","P4","P5","m6","m7"],locrian:["m2","m3","P4","d5","m6","m7"],majorpentatonic:["M2","M3","P5","M6"],minorpentatonic:["m3","P4","P5","m7"],chromatic:["m2","M2","m3","M3","P4","A4","P5","m6","M6","m7","M7"],harmonicchromatic:["m2","M2","m3","M3","P4","A4","P5","m6","M6","m7","M7"]}},module.exports=a})();
-},{}],41:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 module.exports = function( Gibber ) {
   
 "use strict"
@@ -29619,8 +29728,7 @@ var times = [],
     Audio
 
 Audio = {
-  initialized: false, // only run clear function if initialized
-  // can't name export as Gibberish has the same nameAudio
+  // can't name export as Gibberish has the same name
   export: function( target ) {
     $.extend( target, Audio.Busses )       
     $.extend( target, Audio.Oscillators )
@@ -29659,7 +29767,8 @@ Audio = {
     
     target.Input = Audio.Input
     
-    target.Freesound = Audio.Freesound
+    target.Freesound = Audio.Freesound2
+    target.Freesound2 = Audio.Freesound2
     target.Freesoundjs2 = Audio.Freesoundjs2
     
     target.Scale = Audio.Theory.Scale
@@ -29678,7 +29787,6 @@ Audio = {
     target.Master = Audio.Master    
   },
   init: function( callback ) {
-    $ = Gibber.dollar
     // post-processing depends on having context instantiated
     var __onstart = null
     if( Audio.onstart ) __onstart = Audio.onstart
@@ -29687,8 +29795,7 @@ Audio = {
     
     Audio.Core.onstart = function() {
       Audio.Clock.start( true )
-
-
+              
       if( __onstart !== null ) { __onstart() }
       
       Audio.Score = Audio.Score( Gibber )
@@ -29698,6 +29805,7 @@ Audio = {
       Gibber.Theory = Audio.Theory
       
       Gibber.Theory.scale = Gibber.scale = Gibber.Audio.Theory.Scale( 'c4','Minor' )
+      
       
       $.extend( Gibber.Binops, Audio.Binops )
       
@@ -29718,15 +29826,11 @@ Audio = {
         
       Audio.Core.defineUgenProperty = Audio.defineUgenProperty
       
-      Object.assign( Gibber.Presets, Audio.Synths.Presets )
-      Object.assign( Gibber.Presets, Audio.Percussion.Presets )
-      Object.assign( Gibber.Presets, Audio.FX.Presets )
+      $.extend( Gibber.Presets, Audio.Synths.Presets )
+      $.extend( Gibber.Presets, Audio.Percussion.Presets )
+      $.extend( Gibber.Presets, Audio.FX.Presets )
 
-
-      $.publish( 'audio.init', Audio )
       if( typeof callback === 'function' ) callback()
-
-      Audio.initialized = true
     }
     
     
@@ -29834,15 +29938,10 @@ Audio = {
     return this
   },
   clear: function() {
-    if( Audio.initialized === false ) return
     // Audio.analysisUgens.length = 0
     // Audio.sequencers.length = 0
     var args = Array.prototype.slice.call( arguments, 0 ),
-      scaleSeqIsConnected = false
-   
-    if( Gibber.Theory.scale !== undefined ) {
-      scaleSeqIsConnected = Gibber.Theory.scale.seq.isConnected
-    }
+        scaleSeqIsConnected = Audio.Theory.scale.seq.isConnected
     
     
     for( var i = 0; i < Audio.Master.inputs.length; i++ ) {
@@ -30091,8 +30190,10 @@ Audio.Core._init = Audio.Core.init.bind( Audio.Core )
 delete Audio.Core.init
 
 Audio.Clock =          require( './audio/clock' )( Gibber )
+Audio.Freesoundjs =    require( '../external/freesound' )
+Audio.Freesound =      require( './audio/gibber_freesound' )( Audio.Freesoundjs )
 Audio.Freesoundjs2 =   require( '../external/freesound2' )
-Audio.Freesound =      require( './audio/gibber_freesound2' )( Audio.Freesoundjs2 )
+Audio.Freesound2 =     require( './audio/gibber_freesound2' )( Audio.Freesoundjs2 )
 Audio.Seqs =           require( './audio/seq')( Gibber )
 Audio.Theory =         require( './audio/theory' )( Gibber )
 Audio.FX =             require( './audio/fx' )( Gibber )
@@ -30118,7 +30219,7 @@ return Audio
 
 }
 
-},{"../external/freesound2":39,"./audio/additive":42,"./audio/analysis":43,"./audio/arp":44,"./audio/audio_input":45,"./audio/bus":46,"./audio/clock":47,"./audio/drums":48,"./audio/ensemble":49,"./audio/envelopes":50,"./audio/fx":51,"./audio/gibber_freesound2":52,"./audio/oscillators":53,"./audio/postprocessing":54,"./audio/sampler":55,"./audio/score":56,"./audio/seq":57,"./audio/soundfont":58,"./audio/synths":59,"./audio/theory":60,"./audio/ugen":61,"./audio/vocoder":62,"gibberish-dsp":38}],42:[function(require,module,exports){
+},{"../external/freesound":39,"../external/freesound2":40,"./audio/additive":43,"./audio/analysis":44,"./audio/arp":45,"./audio/audio_input":46,"./audio/bus":47,"./audio/clock":48,"./audio/drums":49,"./audio/ensemble":50,"./audio/envelopes":51,"./audio/fx":52,"./audio/gibber_freesound":53,"./audio/gibber_freesound2":54,"./audio/oscillators":55,"./audio/postprocessing":56,"./audio/sampler":57,"./audio/score":58,"./audio/seq":59,"./audio/soundfont":60,"./audio/synths":61,"./audio/theory":62,"./audio/ugen":63,"./audio/vocoder":64,"gibberish-dsp":38}],43:[function(require,module,exports){
 module.exports = function( Gibber ) {
 
 /*
@@ -30207,7 +30308,7 @@ XXX = Ugen({
 Sine.connect()
 Sine.frequency.seq( [440,880], 1/2 )
 */
-},{}],43:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 module.exports = function( Gibber ) {
   "use strict"
   
@@ -30328,7 +30429,7 @@ module.exports = function( Gibber ) {
   
 }
 
-},{"gibberish-dsp":38}],44:[function(require,module,exports){
+},{"gibberish-dsp":38}],45:[function(require,module,exports){
 module.exports = function( Gibber ) {
   
 var theory = require('../../external/teoria.min'),
@@ -30478,7 +30579,7 @@ Arp = function(notation, beats, pattern, mult, scale) {
 return Arp
 
 }
-},{"../../external/teoria.min":40,"./seq":57}],45:[function(require,module,exports){
+},{"../../external/teoria.min":41,"./seq":59}],46:[function(require,module,exports){
 module.exports = function( Gibber ) { 
   "use strict"
   
@@ -30533,7 +30634,7 @@ module.exports = function( Gibber ) {
   
   return Input
 }
-},{"gibberish-dsp":38}],46:[function(require,module,exports){
+},{"gibberish-dsp":38}],47:[function(require,module,exports){
 module.exports = function( Gibber ) {
   "use strict"
   
@@ -30670,7 +30771,7 @@ module.exports = function( Gibber ) {
   return Busses
 }
 
-},{"gibberish-dsp":38}],47:[function(require,module,exports){
+},{"gibberish-dsp":38}],48:[function(require,module,exports){
 !function() {
   
 var times = [],
@@ -30890,7 +30991,7 @@ module.exports = function( __Gibber ) {
 }
 
 }()
-},{"gibberish-dsp":38}],48:[function(require,module,exports){
+},{"gibberish-dsp":38}],49:[function(require,module,exports){
 module.exports = function( Gibber ) {
   "use strict"
   
@@ -31557,7 +31658,7 @@ module.exports = function( Gibber ) {
   
 }
 
-},{"gibberish-dsp":38}],49:[function(require,module,exports){
+},{"gibberish-dsp":38}],50:[function(require,module,exports){
 module.exports = function( Gibber ) {
   "use strict"
   
@@ -31736,7 +31837,7 @@ module.exports = function( Gibber ) {
 
   return Ensemble
 }
-},{"gibberish-dsp":38}],50:[function(require,module,exports){
+},{"gibberish-dsp":38}],51:[function(require,module,exports){
 module.exports = function( Gibber ) {
   "use strict"
   
@@ -31905,7 +32006,7 @@ module.exports = function( Gibber ) {
 
 }
 
-},{"gibberish-dsp":38}],51:[function(require,module,exports){
+},{"gibberish-dsp":38}],52:[function(require,module,exports){
 module.exports = function( Gibber ) {
   "use strict"
   
@@ -32300,7 +32401,171 @@ module.exports = function( Gibber ) {
 
   return FX  
 }
-},{"gibberish-dsp":38}],52:[function(require,module,exports){
+},{"gibberish-dsp":38}],53:[function(require,module,exports){
+module.exports = function( freesound ) {
+  freesound.apiKey = "4287s0onpqpp492n8snr27sp3o228nns".replace(/[a-zA-Z]/g, function(c) {
+    return String.fromCharCode((c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
+  });
+
+  var Freesound = function() {
+    var sampler = Sampler();
+
+    var key = arguments[0] || 96541;
+    var callback = null;
+    var filename, request;
+
+    sampler.done = function(func) {
+      callback = func
+    }
+
+    var onload = function(request) {
+      Gibber.log(filename + " loaded.")
+      Gibber.Audio.Core.context.decodeAudioData(request.response, function(buffer) {
+        Freesound.loaded[filename] = buffer.getChannelData(0)
+        sampler.buffer = Freesound.loaded[filename];
+        sampler.bufferLength = sampler.buffer.length;
+        sampler.isLoaded = true;
+        //sampler.end = sampler.bufferLength;
+        sampler.setBuffer(sampler.buffer);
+        sampler.setPhase(sampler.bufferLength);
+        sampler.filename = filename;
+
+  			//self.length = buffer.length
+        //self.setPhase( self.length )
+        //self.setBuffer( buffer )
+        sampler.isPlaying = true;
+        //self.buffers[ filename ] = buffer;
+        sampler.file = filename
+
+        //console.log("sample loaded | ", filename, " | length | ", buffer.length );
+  			//Gibberish.audioFiles[ filename ] = buffer;
+			
+        if(sampler.onload) sampler.onload();
+      
+        if(sampler.playOnLoad !== 0) sampler.note( self.playOnLoad );
+
+        sampler.send(Master, 1)
+        if (callback) {
+          callback()
+        }
+      }, function(e) {
+        console.log("Error with decoding audio data" + e.err)
+      })
+    }
+
+    // freesound query api https://www.freesound.org/docs/api/resources.html
+    if (typeof key === 'string') {
+      var query = key;
+      Gibber.log('searching freesound for ' + query)
+      freesound.search(query, /*page*/ 0, 'duration:[0.0 TO 10.0]', 'rating_desc', null, null, null,
+        function(sounds) {
+          filename = sounds.sounds[0].original_filename
+
+          if (typeof Freesound.loaded[filename] === 'undefined') {
+            var request = new XMLHttpRequest();
+            Gibber.log("now downloading " + filename + ", " + sounds.sounds[0].duration + " seconds in length")
+            request.open('GET', sounds.sounds[0].serve + "?&api_key=" + freesound.apiKey, true);
+            request.responseType = 'arraybuffer';
+            request.onload = function() {
+              onload(request)
+            };
+            request.send();
+          } else {
+            sampler.buffer = Freesound.loaded[filename];
+            sampler.filename = filename;
+            sampler.bufferLength = sampler.buffer.length;
+            sampler.isLoaded = true;
+            sampler.end = sampler.bufferLength;
+            sampler.setBuffer(sampler.buffer);
+            sampler.setPhase(sampler.bufferLength);
+
+            sampler.send(Master, 1)
+            if (callback) {
+              callback()
+            }
+          }
+        }, function() {
+          displayError("Error while searching...")
+        }
+      );
+    } else if (typeof key === 'object') {
+      var query = key.query,
+        filter = key.filter || "",
+        sort = key.sort || 'rating_desc',
+        page = key.page || 0;
+      pick = key.pick || 0;
+
+      Gibber.log('searching freesound for ' + query)
+
+      filter += ' duration:[0.0 TO 10.0]'
+      freesound.search(query, page, filter, sort, null, null, null,
+        function(sounds) {
+          if (sounds.num_results > 0) {
+            var num = 0;
+
+            if (typeof key.pick === 'number') {
+              num = key.pick
+            } else if (typeof key.pick === 'function') {
+              num = key.pick();
+            } else if (key.pick === 'random') {
+              num = rndi(0, sounds.sounds.length);
+            }
+
+            filename = sounds.sounds[num].original_filename
+
+            if (typeof Freesound.loaded[filename] === 'undefined') {
+              request = new XMLHttpRequest();
+              Gibber.log("now downloading " + filename + ", " + sounds.sounds[num].duration + " seconds in length")
+              request.open('GET', sounds.sounds[num].serve + "?&api_key=" + freesound.apiKey, true);
+              request.responseType = 'arraybuffer';
+              request.onload = function() {
+                onload(request)
+              };
+              request.send();
+            } else {
+              Gibber.log('using exising loaded sample ' + filename)
+              sampler.buffer = Freesound.loaded[filename];
+              sampler.bufferLength = sampler.buffer.length;
+              sampler.isLoaded = true;
+              sampler.end = sampler.bufferLength;
+              sampler.setBuffer(sampler.buffer);
+              sampler.setPhase(sampler.bufferLength);
+
+              sampler.send(Master, 1)
+              if (callback) {
+                callback()
+              }
+            }
+          } else {
+            Gibber.log("No Freesound files matched your query.")
+          }
+        }, function() {
+          console.log("Error while searching...")
+        }
+      );
+    } else if (typeof key === 'number') {
+      Gibber.log('downloading sound #' + key + ' from freesound.org')
+      freesound.get_sound(key,
+        function(sound) {
+          request = new XMLHttpRequest();
+          filename = sound.original_filename
+          request.open('GET', sound.serve + "?api_key=" + freesound.apiKey, true);
+          request.responseType = 'arraybuffer';
+          request.onload = function() {
+            onload(request)
+          };
+          request.send();
+        }
+      )
+    }
+    return sampler;
+  }
+  Freesound.loaded = {};
+
+  return Freesound
+}
+
+},{}],54:[function(require,module,exports){
 module.exports = function( freesound ) {
   freesound.setToken('6a00f80ba02b2755a044cc4ef004febfc4ccd476')
 
@@ -32334,7 +32599,7 @@ module.exports = function( freesound ) {
         Gibber.Audio.Core.audioFiles[sampler.filename] = buffer;
         sampler.buffers[ sampler.filename ] = buffer;       //
         sampler.file = filename
-        sampler.send( Master, 1 )
+        sampler.send(Master, 1)
         if (callback) {
           callback()
         }
@@ -32343,7 +32608,7 @@ module.exports = function( freesound ) {
       })
     }
 
-    // freesound query api http://www.freesound.org/docs/api/resources.html
+    // freesound query api https://www.freesound.org/docs/api/resources.html
     if (typeof key === 'string') {
       var query = key;
       Gibber.log('searching freesound for ' + query)
@@ -32372,8 +32637,6 @@ module.exports = function( freesound ) {
                 onload(request)
               };
               request.send();
-
-              console.log( 'freesound path:', path, request )
             }, null )
           } else {
             sampler.buffer = Freesound.loaded[filename];
@@ -32535,7 +32798,7 @@ module.exports = function( freesound ) {
   return Freesound
 }
 
-},{}],53:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 module.exports = function( Gibber ) {
   "use strict"
   
@@ -32807,7 +33070,7 @@ module.exports = function( Gibber ) {
   return Oscillators
 }
 
-},{"gibberish-dsp":38}],54:[function(require,module,exports){
+},{"gibberish-dsp":38}],56:[function(require,module,exports){
 module.exports = function( Gibber ) {
   "use strict";
   var loadBuffer = function(ctx, filename, callback) {
@@ -33029,7 +33292,7 @@ module.exports = function( Gibber ) {
   
   return PP
 }
-},{}],55:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 module.exports = function( Gibber ) { 
   "use strict"
   
@@ -33403,7 +33666,7 @@ module.exports = function( Gibber ) {
   return Samplers
 }
 
-},{"./clock":47,"gibberish-dsp":38}],56:[function(require,module,exports){
+},{"./clock":48,"gibberish-dsp":38}],58:[function(require,module,exports){
 /*
 Score is a Seq(ish) object, with pause, start / stop, rewind, fast-forward.
 It's internal phase is 
@@ -33732,7 +33995,7 @@ song = Score([
 song.start()
 
 */
-},{"gibberish-dsp":38}],57:[function(require,module,exports){
+},{"gibberish-dsp":38}],59:[function(require,module,exports){
 module.exports = function( Gibber ) {
   //"use strict"
   
@@ -34089,7 +34352,7 @@ module.exports = function( Gibber ) {
   return Seqs 
 }
 
-},{"gibberish-dsp":38}],58:[function(require,module,exports){
+},{"gibberish-dsp":38}],60:[function(require,module,exports){
 module.exports = function( Gibber, pathToSoundFonts ) {
   var Gibberish = require( 'gibberish-dsp' ),
       curves = Gibber.outputCurves,
@@ -34245,7 +34508,7 @@ module.exports = function( Gibber, pathToSoundFonts ) {
   return SoundFont
 }
 
-},{"./theory":60,"gibberish-dsp":38}],59:[function(require,module,exports){
+},{"./theory":62,"gibberish-dsp":38}],61:[function(require,module,exports){
 module.exports = function( Gibber ) {
   "use strict"
   
@@ -34724,7 +34987,7 @@ module.exports = function( Gibber ) {
 
 }
 
-},{"./clock":47,"gibberish-dsp":38}],60:[function(require,module,exports){
+},{"./clock":48,"gibberish-dsp":38}],62:[function(require,module,exports){
 module.exports = function( Gibber ) {
   "use strict"
 
@@ -34895,14 +35158,14 @@ var Theory = {
     Chromatic: function( root ) { return Theory.CustomScale( root, [1, 16/15, 9/8, 6/5, 5/4, 4/3, 45/32, 3/2, 8/5, 5/3, 7/4, 15/8 ]) },
   	// Scales contributed by Luke Taylor
   	// Half-Whole or Octatonic Scale
-  	//http://en.wikipedia.org/wiki/Octatonic_scale
+  	//https://en.wikipedia.org/wiki/Octatonic_scale
     
   	HalfWhole : function(root) { return Theory.CustomScale( root, [ 1,1.059463,1.189207,1.259921,1.414214,1.498307,1.681793, 1.781797 ]); },
 
-  	//Whole-Half or Octatonic Scale http://en.wikipedia.org/wiki/Octatonic_scale
+  	//Whole-Half or Octatonic Scale https://en.wikipedia.org/wiki/Octatonic_scale
   	WholeHalf : function(root) { return Theory.CustomScale( root, [ 1,1.122462,1.189207,1.334840,1.414214,1.587401,1.681793, 1.887749 ]); },
 
-  	//Pythagorean Tuning http://en.wikipedia.org/wiki/Pythagorean_tuning
+  	//Pythagorean Tuning https://en.wikipedia.org/wiki/Pythagorean_tuning
 
   	//Chromatic scale in Pythagorean tuning
   	Pythagorean : function(root) { return Theory.CustomScale( root, [ 1, 256/243, 9/8, 32/27, 81/64, 4/3, 729/512, 3/2, 128/81, 27/16, 16/9, 243/128 ]); },
@@ -34913,7 +35176,7 @@ var Theory = {
   	//Major Pythagorean
   	PythagoreanMinor : function(root) { return Theory.CustomScale( root, [ 1, 9/8, 32/27, 4/3, 3/2, 128/81, 16/9 ]); },
 	
-  	// 5-limit Just Intonation http://en.wikipedia.org/wiki/List_of_intervals_in_5-limit_just_intonation
+  	// 5-limit Just Intonation https://en.wikipedia.org/wiki/List_of_intervals_in_5-limit_just_intonation
   	//Chromatic scale in 5-limit just intonation
   	Limit5 : function(root) { return Theory.CustomScale( root, [ 1, 16/15, 9/8, 6/5, 5/4, 4/3, 45/32, 3/2, 8/5, 5/3, 9/5, 15/8 ]); },
 
@@ -34923,7 +35186,7 @@ var Theory = {
   	//Minor scale in 5-limit
   	Limit5Minor : function(root) { return Theory.CustomScale( root, [ 1, 9/8, 6/5, 4/3, 3/2, 8/5, 9/5 ]); },
 
-  	// Messiaen's modes of limited transposition http://en.wikipedia.org/wiki/Modes_of_limited_transposition
+  	// Messiaen's modes of limited transposition https://en.wikipedia.org/wiki/Modes_of_limited_transposition
   	Mess3 : function(root) { return Theory.CustomScale( root, [1,1.122462, 1.189207, 1.259921, 1.414214, 1.498307, 1.587401, 1.781797, 1.887749 ]) },
   	Mess4 : function(root) { return Theory.CustomScale( root, [1, 1.059463, 1.122462, 1.334840, 1.414214, 1.498307, 1.587401, 1.887749 ]) },
   	Mess5 : function(root) { return Theory.CustomScale( root, [1, 1.059463, 1.334840, 1.414214, 1.498307, 1.887749 ]) },
@@ -34933,11 +35196,11 @@ var Theory = {
   	//And, a personal (anthony garcia) favorite synthetic mode, lydian flat 7:
   	Adams : function(root) { return Theory.CustomScale( root, [1, 1.122462, 1.259921, 1.414214, 1.498307, 1.681793, 1.781797 ]) },
 
-  	//5 tone equal temperament //http://en.wikipedia.org/wiki/Equal_temperament#5_and_7_tone_temperaments_in_ethnomusicology
+  	//5 tone equal temperament //https://en.wikipedia.org/wiki/Equal_temperament#5_and_7_tone_temperaments_in_ethnomusicology
   	Equal5Tone : function(root) { return Theory.CustomScale( root, [ 1, 1.15, 1.32, 1.35, 1.52, 1.74 ]); },
 
   	//7 tone equal temperament
-  	//http://en.wikipedia.org/wiki/Equal_temperament#5_and_7_tone_temperaments_in_ethnomusicology
+  	//https://en.wikipedia.org/wiki/Equal_temperament#5_and_7_tone_temperaments_in_ethnomusicology
   	Equal7Tone : function(root) { return Theory.CustomScale( root, [ 1, 1.1, 1.22, 1.35, 1.49, 1.64, 1.81 ]); },
 
   	Just : function(root) { return Theory.CustomScale( root, [ 1, 1.0417, 1.1250, 1.2000, 1.2500, 1.3333, 1.4063, 1.5, 1.6, 1.6667, 1.8, 1.8750] ); },
@@ -35011,7 +35274,6 @@ var Theory = {
             note = _note
             break;
           case 'object':
-            if( _note === null ) return
             if( _note.fq )
               note = _note.fq()
             else
@@ -35040,7 +35302,7 @@ return Theory
 
 }
 
-},{"../../external/teoria.min":40}],61:[function(require,module,exports){
+},{"../../external/teoria.min":41}],63:[function(require,module,exports){
 module.exports = function( Gibber ) {
 
 var Ugen = function( desc ) {
@@ -35140,7 +35402,7 @@ b = XXX({ frequency:250, amp:.1 })
 a.frequency.seq( [440,880], 1/2 )
 
 */
-},{}],62:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 module.exports = function( Gibber ) {
   "use strict"
   
@@ -35242,9 +35504,9 @@ module.exports = function( Gibber ) {
   return Vocoder
 }
       
-},{"./clock":47,"gibberish-dsp":38}],63:[function(require,module,exports){
+},{"./clock":48,"gibberish-dsp":38}],65:[function(require,module,exports){
 arguments[4][35][0].apply(exports,arguments)
-},{"color-convert":65,"color-string":66,"dup":35}],64:[function(require,module,exports){
+},{"color-convert":67,"color-string":68,"dup":35}],66:[function(require,module,exports){
 /* MIT license */
 
 module.exports = {
@@ -35558,7 +35820,7 @@ function hsv2keyword(args) {
   return rgb2keyword(hsv2rgb(args));
 }
 
-// http://dev.w3.org/csswg/css-color/#hwb-to-rgb
+// https://dev.w3.org/csswg/css-color/#hwb-to-rgb
 function hwb2rgb(hwb) {
   var h = hwb[0] / 360,
       wh = hwb[1] / 100,
@@ -35936,9 +36198,9 @@ for (var key in cssKeywords) {
   reverseKeywords[JSON.stringify(cssKeywords[key])] = key;
 }
 
-},{}],65:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 arguments[4][32][0].apply(exports,arguments)
-},{"./conversions":64,"dup":32}],66:[function(require,module,exports){
+},{"./conversions":66,"dup":32}],68:[function(require,module,exports){
 /* MIT license */
 var convert = require("color-convert");
 
@@ -36152,9 +36414,9 @@ function hexDouble(num) {
   return (str.length < 2) ? "0" + str : str;
 }
 
-},{"color-convert":65}],67:[function(require,module,exports){
+},{"color-convert":67}],69:[function(require,module,exports){
 /**
- * @author alteredq / http://alteredqualia.com/
+ * @author alteredq / https://alteredqualia.com/
  *
  * Full-screen textured quad shader
  */
@@ -36200,9 +36462,9 @@ THREE.CopyShader = {
 
 };
 
-},{}],68:[function(require,module,exports){
+},{}],70:[function(require,module,exports){
 /**
- * @author alteredq / http://alteredqualia.com/
+ * @author alteredq / https://alteredqualia.com/
  */
 
 THREE.DotScreenPass = function ( center, angle, scale, mix ) {
@@ -36256,9 +36518,9 @@ THREE.DotScreenPass.prototype = {
 
 };
 
-},{}],69:[function(require,module,exports){
+},{}],71:[function(require,module,exports){
 /**
- * @author alteredq / http://alteredqualia.com/
+ * @author alteredq / https://alteredqualia.com/
  */
 
 THREE.EffectComposer = function ( renderer, renderTarget ) {
@@ -36402,9 +36664,9 @@ THREE.EffectComposer.quad = new THREE.Mesh( new THREE.PlaneGeometry( 2, 2 ), nul
 THREE.EffectComposer.scene = new THREE.Scene();
 THREE.EffectComposer.scene.add( THREE.EffectComposer.quad );
 
-},{}],70:[function(require,module,exports){
+},{}],72:[function(require,module,exports){
 /**
- * @author alteredq / http://alteredqualia.com/
+ * @author alteredq / https://alteredqualia.com/
  */
 
 THREE.FilmPass = function ( noiseIntensity, scanlinesIntensity, scanlinesCount, grayscale ) {
@@ -36458,9 +36720,9 @@ THREE.FilmPass.prototype = {
 
 };
 
-},{}],71:[function(require,module,exports){
+},{}],73:[function(require,module,exports){
 /**
- * @author alteredq / http://alteredqualia.com/
+ * @author alteredq / https://alteredqualia.com/
  */
 
 THREE.MaskPass = function ( scene, camera ) {
@@ -36546,9 +36808,9 @@ THREE.ClearMaskPass.prototype = {
 
 };
 
-},{}],72:[function(require,module,exports){
+},{}],74:[function(require,module,exports){
 /**
- * @author alteredq / http://alteredqualia.com/
+ * @author alteredq / https://alteredqualia.com/
  */
 
 THREE.RenderPass = function ( scene, camera, overrideMaterial, clearColor, clearAlpha ) {
@@ -36599,9 +36861,9 @@ THREE.RenderPass.prototype = {
 
 };
 
-},{}],73:[function(require,module,exports){
+},{}],75:[function(require,module,exports){
 /**
- * @author alteredq / http://alteredqualia.com/
+ * @author alteredq / https://alteredqualia.com/
  */
 
 THREE.ShaderPass = function ( shader, textureID ) {
@@ -36652,13 +36914,13 @@ THREE.ShaderPass.prototype = {
 
 };
 
-},{}],74:[function(require,module,exports){
+},{}],76:[function(require,module,exports){
 /**
- * @author alteredq / http://alteredqualia.com/
+ * @author alteredq / https://alteredqualia.com/
  *
- * Bleach bypass shader [http://en.wikipedia.org/wiki/Bleach_bypass]
+ * Bleach bypass shader [https://en.wikipedia.org/wiki/Bleach_bypass]
  * - based on Nvidia example
- * http://developer.download.nvidia.com/shaderlibrary/webpages/shader_library.html#post_bleach_bypass
+ * https://developer.download.nvidia.com/shaderlibrary/webpages/shader_library.html#post_bleach_bypass
  */
 
 THREE.BleachBypassShader = {
@@ -36718,9 +36980,9 @@ THREE.BleachBypassShader = {
 
 };
 
-},{}],75:[function(require,module,exports){
+},{}],77:[function(require,module,exports){
 /**
- * @author alteredq / http://alteredqualia.com/
+ * @author alteredq / https://alteredqualia.com/
  *
  * Colorify shader
  */
@@ -36769,9 +37031,9 @@ THREE.ColorifyShader = {
 
 };
 
-},{}],76:[function(require,module,exports){
+},{}],78:[function(require,module,exports){
 /**
- * @author alteredq / http://alteredqualia.com/
+ * @author alteredq / https://alteredqualia.com/
  *
  * Dot screen shader
  * based on glfx.js sepia shader
@@ -36839,12 +37101,12 @@ THREE.DotScreenShader = {
 
 };
 
-},{}],77:[function(require,module,exports){
+},{}],79:[function(require,module,exports){
 /**
  * @author zz85 / https://github.com/zz85 | https://www.lab4games.net/zz85/blog
  *
  * Edge Detection Shader using Frei-Chen filter
- * Based on http://rastergrid.com/blog/2011/01/frei-chen-edge-detector
+ * Based on https://rastergrid.com/blog/2011/01/frei-chen-edge-detector
  *
  * aspect: vec2 of (1/width, 1/height)
  */
@@ -36934,14 +37196,14 @@ THREE.EdgeShader = {
 	].join("\n")
 };
 
-},{}],78:[function(require,module,exports){
+},{}],80:[function(require,module,exports){
 /**
- * @author alteredq / http://alteredqualia.com/
+ * @author alteredq / https://alteredqualia.com/
  *
  * Film grain & scanlines shader
  *
  * - ported from HLSL to WebGL / GLSL
- * http://www.truevision3d.com/forums/showcase/staticnoise_colorblackwhite_scanline_shaders-t18698.0.html
+ * https://www.truevision3d.com/forums/showcase/staticnoise_colorblackwhite_scanline_shaders-t18698.0.html
  *
  * Screen Space Static Postprocessor
  *
@@ -36954,7 +37216,7 @@ THREE.EdgeShader = {
  * Georg 'Leviathan' Steinrohder
  *
  * This version is provided under a Creative Commons Attribution 3.0 License
- * http://creativecommons.org/licenses/by/3.0/
+ * https://creativecommons.org/licenses/by/3.0/
  */
 
 THREE.FilmShader = {
@@ -37040,13 +37302,13 @@ THREE.FilmShader = {
 
 };
 
-},{}],79:[function(require,module,exports){
+},{}],81:[function(require,module,exports){
 /**
- * @author alteredq / http://alteredqualia.com/
+ * @author alteredq / https://alteredqualia.com/
  *
  * Focus shader
  * based on PaintEffect postprocess from ro.me
- * http://code.google.com/p/3-dreams-of-black/source/browse/deploy/js/effects/PaintEffect.js
+ * https://code.google.com/p/3-dreams-of-black/source/browse/deploy/js/effects/PaintEffect.js
  */
 
 THREE.FocusShader = {
@@ -37133,14 +37395,14 @@ THREE.FocusShader = {
 	].join("\n")
 };
 
-},{}],80:[function(require,module,exports){
+},{}],82:[function(require,module,exports){
 /**
- * @author felixturner / http://airtight.cc/
+ * @author felixturner / https://airtight.cc/
  *
  * Kaleidoscope Shader
  * Radial reflection around center point
- * Ported from: http://pixelshaders.com/editor/
- * by Toby Schachman / http://tobyschachman.com/
+ * Ported from: https://pixelshaders.com/editor/
+ * by Toby Schachman / https://tobyschachman.com/
  *
  * sides: number of reflections
  * angle: initial angle in radians
@@ -37195,9 +37457,9 @@ THREE.KaleidoShader = {
 
 };
 
-},{}],81:[function(require,module,exports){
+},{}],83:[function(require,module,exports){
 /**
- * @author huwb / http://huwbowles.com/
+ * @author huwb / https://huwbowles.com/
  *
  * God-rays (crepuscular rays)
  *
@@ -37213,7 +37475,7 @@ THREE.KaleidoShader = {
  *
  * References:
  *
- * Sousa2008 - Crysis Next Gen Effects, GDC2008, http://www.crytek.com/sites/default/files/GDC08_SousaT_CrysisEffects.ppt
+ * Sousa2008 - Crysis Next Gen Effects, GDC2008, https://www.crytek.com/sites/default/files/GDC08_SousaT_CrysisEffects.ppt
  */
 
 THREE.ShaderGodRays = {
@@ -37301,7 +37563,7 @@ THREE.ShaderGodRays = {
 				"float col = 0.0;",
 
 				// This breaks ANGLE in Chrome 22
-				//	- see http://code.google.com/p/chromium/issues/detail?id=153105
+				//	- see https://code.google.com/p/chromium/issues/detail?id=153105
 
 				/*
 				// Unrolling didnt do much on my hardware (ATI Mobility Radeon 3450),
@@ -37505,8 +37767,8 @@ THREE.ShaderGodRays = {
 
 };
 
-},{}],82:[function(require,module,exports){
-// three.js - http://github.com/mrdoob/three.js
+},{}],84:[function(require,module,exports){
+// three.js - https://github.com/mrdoob/three.js
 
 !function(){
 'use strict';var THREE= window.THREE = THREE||{REVISION:"58"};self.console=self.console||{info:function(){},log:function(){},debug:function(){},warn:function(){},error:function(){}};self.Int32Array=self.Int32Array||Array;self.Float32Array=self.Float32Array||Array;String.prototype.trim=String.prototype.trim||function(){return this.replace(/^\s+|\s+$/g,"")};
@@ -38221,7 +38483,7 @@ fragmentShader:"uniform vec3 color;\nuniform sampler2D map;\nuniform float opaci
 
 module.exports = THREE
 }()
-},{}],83:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
 module.exports = function( Gibber, Graphics ) {
   "use strict"
   var $ = Gibber.dollar
@@ -38742,7 +39004,7 @@ module.exports = function( Gibber, Graphics ) {
   
   return TwoD
 }
-},{}],84:[function(require,module,exports){
+},{}],86:[function(require,module,exports){
 module.exports = function( Gibber, Graphics ) {
   "use strict"
   
@@ -38897,7 +39159,7 @@ module.exports = function( Gibber, Graphics ) {
   return ThreeD
 }
 
-},{}],85:[function(require,module,exports){
+},{}],87:[function(require,module,exports){
 module.exports = function( Gibber, Graphics, THREE ){ 
 
 "use strict"
@@ -39361,7 +39623,7 @@ return Geometry;
 
 }
 
-},{}],86:[function(require,module,exports){
+},{}],88:[function(require,module,exports){
 module.exports = function( Gibber, Graphics ) {
 
 "use strict"
@@ -39585,7 +39847,7 @@ return Shaders
 
 }
 
-},{}],87:[function(require,module,exports){
+},{}],89:[function(require,module,exports){
 module.exports = function( Gibber ) {
 
 "use strict"
@@ -39631,7 +39893,6 @@ Graphics = {
   },
   
   init : function( mode, container ) { 
-    $ = Gibber.dollar
     if( mode === '3d' && !window.WebGLRenderingContext ) {
       var msg = 'Your browser does not support WebGL. 2D drawing will work, but 3D geometries and shaders are not supported.'
         
@@ -39906,7 +40167,7 @@ return Graphics;
 
 }
 
-},{"../external/three/postprocessing/CopyShader":67,"../external/three/postprocessing/DotScreenPass":68,"../external/three/postprocessing/EffectComposer":69,"../external/three/postprocessing/FilmPass":70,"../external/three/postprocessing/MaskPass":71,"../external/three/postprocessing/RenderPass":72,"../external/three/postprocessing/ShaderPass":73,"../external/three/postprocessing/shaders/BleachBypassShader":74,"../external/three/postprocessing/shaders/ColorifyShader":75,"../external/three/postprocessing/shaders/DotScreenShader":76,"../external/three/postprocessing/shaders/EdgeShader":77,"../external/three/postprocessing/shaders/FilmShader":78,"../external/three/postprocessing/shaders/FocusShader":79,"../external/three/postprocessing/shaders/KaleidoShader":80,"../external/three/postprocessing/shaders/ShaderGodRays":81,"../external/three/three.min":82,"./2d":83,"./3d":84,"./geometry":85,"./gibber_shaders":86,"./postprocessing":88,"./shader":89,"./video":90,"color":63}],88:[function(require,module,exports){
+},{"../external/three/postprocessing/CopyShader":69,"../external/three/postprocessing/DotScreenPass":70,"../external/three/postprocessing/EffectComposer":71,"../external/three/postprocessing/FilmPass":72,"../external/three/postprocessing/MaskPass":73,"../external/three/postprocessing/RenderPass":74,"../external/three/postprocessing/ShaderPass":75,"../external/three/postprocessing/shaders/BleachBypassShader":76,"../external/three/postprocessing/shaders/ColorifyShader":77,"../external/three/postprocessing/shaders/DotScreenShader":78,"../external/three/postprocessing/shaders/EdgeShader":79,"../external/three/postprocessing/shaders/FilmShader":80,"../external/three/postprocessing/shaders/FocusShader":81,"../external/three/postprocessing/shaders/KaleidoShader":82,"../external/three/postprocessing/shaders/ShaderGodRays":83,"../external/three/three.min":84,"./2d":85,"./3d":86,"./geometry":87,"./gibber_shaders":88,"./postprocessing":90,"./shader":91,"./video":92,"color":65}],90:[function(require,module,exports){
 module.exports = function( Gibber, Graphics ) {
 
 "use strict"
@@ -40548,7 +40809,7 @@ return PP
 
 }
 
-},{}],89:[function(require,module,exports){
+},{}],91:[function(require,module,exports){
 module.exports = function( Gibber, Graphics ) {
   var GG = Gibber.Graphics
 	
@@ -40776,7 +41037,7 @@ module.exports = function( Gibber, Graphics ) {
     // } 
 }
 
-},{}],90:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
 /*
 a = Video()
 
@@ -40867,7 +41128,7 @@ module.exports = function( Gibber, Graphics ) {
   return Video 
 }
 
-},{}],91:[function(require,module,exports){
+},{}],93:[function(require,module,exports){
 /**#Interface
 A singleton object holding all widget constructors and a couple of other methods / properties. It is automatically created as soon as interface.js is loaded.
 **/
@@ -44079,7 +44340,7 @@ Interface.Accelerometer = function() {
   .init( arguments[0] );
     
 	if(!Interface.isAndroid) {
-	    this.hardwareMin = -2.307 * metersPerSecondSquared;  // as found here: http://www.iphonedevsdk.com/forum/iphone-sdk-development/4822-maximum-accelerometer-reading.html
+	    this.hardwareMin = -2.307 * metersPerSecondSquared;  // as found here: https://www.iphonedevsdk.com/forum/iphone-sdk-development/4822-maximum-accelerometer-reading.html
 	    this.hardwareMax = 2.307 * metersPerSecondSquared;   // -1 to 1 works much better for devices without gyros to measure tilt, -2 to 2 much better to measure force
 	}else{
 	    this.hardwareMin = metersPerSecondSquared;
@@ -44561,9 +44822,9 @@ Interface.defineChildProperties = function(widget, properties) {
 module.exports = Interface
 
 }()
-},{"jquery":92}],92:[function(require,module,exports){
+},{"jquery":94}],94:[function(require,module,exports){
 arguments[4][37][0].apply(exports,arguments)
-},{"dup":37}],93:[function(require,module,exports){
+},{"dup":37}],95:[function(require,module,exports){
 module.exports = function( Gibber ) {
 
 var Interface = Gibber.Interface
@@ -44715,7 +44976,7 @@ var Autogui = {
 return Autogui
 
 }
-},{}],94:[function(require,module,exports){
+},{}],96:[function(require,module,exports){
 module.exports = function( Gibber ) {
   var $ = Gibber.dollar,
       mouse = require( './mouse.js' ) // delay initialization until export
@@ -45463,7 +45724,7 @@ module.exports = function( Gibber ) {
   return I
 }
 
-},{"./autogui":93,"./mouse.js":95,"interface.js":91}],95:[function(require,module,exports){
+},{"./autogui":95,"./mouse.js":97,"interface.js":93}],97:[function(require,module,exports){
 module.exports = function( Gibber ) {
   "use strict"
   
@@ -45646,7 +45907,7 @@ module.exports = function( Gibber ) {
     
     return _m
 }
-},{}],96:[function(require,module,exports){
+},{}],98:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -45762,9 +46023,9 @@ function fromByteArray (uint8) {
   return parts.join('')
 }
 
-},{}],97:[function(require,module,exports){
+},{}],99:[function(require,module,exports){
 
-},{}],98:[function(require,module,exports){
+},{}],100:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -46713,7 +46974,7 @@ function utf8Slice (buf, start, end) {
   return decodeCodePointsArray(res)
 }
 
-// Based on http://stackoverflow.com/a/22747272/680742, the browser with
+// Based on https://stackoverflow.com/a/22747272/680742, the browser with
 // the lowest limit is Chrome, with 0x10000 args.
 // We go 1 magnitude less, for safety
 var MAX_ARGUMENTS_LENGTH = 0x1000
@@ -47480,7 +47741,7 @@ function numberIsNaN (obj) {
   return obj !== obj // eslint-disable-line no-self-compare
 }
 
-},{"base64-js":96,"ieee754":109}],99:[function(require,module,exports){
+},{"base64-js":98,"ieee754":111}],101:[function(require,module,exports){
 module.exports = {
   "100": "Continue",
   "101": "Switching Protocols",
@@ -47546,9 +47807,9 @@ module.exports = {
   "511": "Network Authentication Required"
 }
 
-},{}],100:[function(require,module,exports){
+},{}],102:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
-// Distributed under an MIT license: http://codemirror.net/LICENSE
+// Distributed under an MIT license: https://codemirror.net/LICENSE
 
 (function(mod) {
   if (typeof exports == "object" && typeof module == "object") // CommonJS
@@ -47761,9 +48022,9 @@ module.exports = {
   });
 });
 
-},{"../../lib/codemirror":103}],101:[function(require,module,exports){
+},{"../../lib/codemirror":105}],103:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
-// Distributed under an MIT license: http://codemirror.net/LICENSE
+// Distributed under an MIT license: https://codemirror.net/LICENSE
 
 (function(mod) {
   if (typeof exports == "object" && typeof module == "object") // CommonJS
@@ -47965,9 +48226,9 @@ module.exports = {
   }
 });
 
-},{"../../lib/codemirror":103}],102:[function(require,module,exports){
+},{"../../lib/codemirror":105}],104:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
-// Distributed under an MIT license: http://codemirror.net/LICENSE
+// Distributed under an MIT license: https://codemirror.net/LICENSE
 
 (function(mod) {
   if (typeof exports == "object" && typeof module == "object") // CommonJS
@@ -48107,15 +48368,15 @@ module.exports = {
   });
 });
 
-},{"../../lib/codemirror":103}],103:[function(require,module,exports){
+},{"../../lib/codemirror":105}],105:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
-// Distributed under an MIT license: http://codemirror.net/LICENSE
+// Distributed under an MIT license: https://codemirror.net/LICENSE
 
-// This is CodeMirror (http://codemirror.net), a code editor
+// This is CodeMirror (https://codemirror.net), a code editor
 // implemented in JavaScript on top of the browser's DOM.
 //
 // You can find some technical background for some of the code below
-// at http://marijnhaverbeke.nl/blog/#cm-internals .
+// at https://marijnhaverbeke.nl/blog/#cm-internals .
 
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -49039,7 +49300,7 @@ function getBidiPartAt(order, ch, sticky) {
 }
 
 // Bidirectional ordering algorithm
-// See http://unicode.org/reports/tr9/tr9-13.html for the algorithm
+// See https://unicode.org/reports/tr9/tr9-13.html for the algorithm
 // that this (partially) implements.
 
 // One-char codes used for character types:
@@ -53572,7 +53833,7 @@ function changeLine(doc, handle, changeType, op) {
 // It also indexes by height, and is used to convert between height
 // and line object, and to find the total height of the document.
 //
-// See also http://marijnhaverbeke.nl/blog/codemirror-line-tree.html
+// See also https://marijnhaverbeke.nl/blog/codemirror-line-tree.html
 
 function LeafChunk(lines) {
   var this$1 = this;
@@ -57600,9 +57861,9 @@ return CodeMirror$1;
 
 })));
 
-},{}],104:[function(require,module,exports){
+},{}],106:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
-// Distributed under an MIT license: http://codemirror.net/LICENSE
+// Distributed under an MIT license: https://codemirror.net/LICENSE
 
 (function(mod) {
   if (typeof exports == "object" && typeof module == "object") // CommonJS
@@ -58391,9 +58652,9 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {
 
 });
 
-},{"../../lib/codemirror":103}],105:[function(require,module,exports){
+},{"../../lib/codemirror":105}],107:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
-// Distributed under an MIT license: http://codemirror.net/LICENSE
+// Distributed under an MIT license: https://codemirror.net/LICENSE
 
 (function(mod) {
   if (typeof exports == "object" && typeof module == "object") // CommonJS
@@ -59211,7 +59472,7 @@ CodeMirror.defineMIME("application/typescript", { name: "javascript", typescript
 
 });
 
-},{"../../lib/codemirror":103}],106:[function(require,module,exports){
+},{"../../lib/codemirror":105}],108:[function(require,module,exports){
 (function (Buffer){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -59322,7 +59583,7 @@ function objectToString(o) {
 }
 
 }).call(this,{"isBuffer":require("../../is-buffer/index.js")})
-},{"../../is-buffer/index.js":111}],107:[function(require,module,exports){
+},{"../../is-buffer/index.js":113}],109:[function(require,module,exports){
 /*
   Copyright (c) jQuery Foundation, Inc. and Contributors, All Rights Reserved.
 
@@ -65064,7 +65325,7 @@ function objectToString(o) {
 }));
 /* vim: set sw=4 ts=4 et tw=80 : */
 
-},{}],108:[function(require,module,exports){
+},{}],110:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -65368,7 +65629,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],109:[function(require,module,exports){
+},{}],111:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = nBytes * 8 - mLen - 1
@@ -65454,7 +65715,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],110:[function(require,module,exports){
+},{}],112:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -65479,11 +65740,11 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],111:[function(require,module,exports){
+},{}],113:[function(require,module,exports){
 /*!
  * Determine if an object is a Buffer
  *
- * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+ * @author   Feross Aboukhadijeh <feross@feross.org> <https://feross.org>
  * @license  MIT
  */
 
@@ -65502,7 +65763,7 @@ function isSlowBuffer (obj) {
   return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
 }
 
-},{}],112:[function(require,module,exports){
+},{}],114:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -65549,7 +65810,7 @@ function nextTick(fn, arg1, arg2, arg3) {
 }
 
 }).call(this,require('_process'))
-},{"_process":113}],113:[function(require,module,exports){
+},{"_process":115}],115:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -65735,7 +65996,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],114:[function(require,module,exports){
+},{}],116:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -66272,7 +66533,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],115:[function(require,module,exports){
+},{}],117:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -66358,7 +66619,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],116:[function(require,module,exports){
+},{}],118:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -66445,13 +66706,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],117:[function(require,module,exports){
+},{}],119:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":115,"./encode":116}],118:[function(require,module,exports){
+},{"./decode":117,"./encode":118}],120:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -66576,7 +66837,7 @@ function forEach(xs, f) {
     f(xs[i], i);
   }
 }
-},{"./_stream_readable":120,"./_stream_writable":122,"core-util-is":106,"inherits":110,"process-nextick-args":112}],119:[function(require,module,exports){
+},{"./_stream_readable":122,"./_stream_writable":124,"core-util-is":108,"inherits":112,"process-nextick-args":114}],121:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -66624,7 +66885,7 @@ function PassThrough(options) {
 PassThrough.prototype._transform = function (chunk, encoding, cb) {
   cb(null, chunk);
 };
-},{"./_stream_transform":121,"core-util-is":106,"inherits":110}],120:[function(require,module,exports){
+},{"./_stream_transform":123,"core-util-is":108,"inherits":112}],122:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -67634,7 +67895,7 @@ function indexOf(xs, x) {
   return -1;
 }
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./_stream_duplex":118,"./internal/streams/BufferList":123,"./internal/streams/destroy":124,"./internal/streams/stream":125,"_process":113,"core-util-is":106,"events":108,"inherits":110,"isarray":126,"process-nextick-args":112,"safe-buffer":129,"string_decoder/":127,"util":97}],121:[function(require,module,exports){
+},{"./_stream_duplex":120,"./internal/streams/BufferList":125,"./internal/streams/destroy":126,"./internal/streams/stream":127,"_process":115,"core-util-is":108,"events":110,"inherits":112,"isarray":128,"process-nextick-args":114,"safe-buffer":131,"string_decoder/":129,"util":99}],123:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -67849,7 +68110,7 @@ function done(stream, er, data) {
 
   return stream.push(null);
 }
-},{"./_stream_duplex":118,"core-util-is":106,"inherits":110}],122:[function(require,module,exports){
+},{"./_stream_duplex":120,"core-util-is":108,"inherits":112}],124:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -68516,7 +68777,7 @@ Writable.prototype._destroy = function (err, cb) {
   cb(err);
 };
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./_stream_duplex":118,"./internal/streams/destroy":124,"./internal/streams/stream":125,"_process":113,"core-util-is":106,"inherits":110,"process-nextick-args":112,"safe-buffer":129,"util-deprecate":137}],123:[function(require,module,exports){
+},{"./_stream_duplex":120,"./internal/streams/destroy":126,"./internal/streams/stream":127,"_process":115,"core-util-is":108,"inherits":112,"process-nextick-args":114,"safe-buffer":131,"util-deprecate":139}],125:[function(require,module,exports){
 'use strict';
 
 /*<replacement>*/
@@ -68591,7 +68852,7 @@ module.exports = function () {
 
   return BufferList;
 }();
-},{"safe-buffer":129}],124:[function(require,module,exports){
+},{"safe-buffer":131}],126:[function(require,module,exports){
 'use strict';
 
 /*<replacement>*/
@@ -68664,17 +68925,17 @@ module.exports = {
   destroy: destroy,
   undestroy: undestroy
 };
-},{"process-nextick-args":112}],125:[function(require,module,exports){
+},{"process-nextick-args":114}],127:[function(require,module,exports){
 module.exports = require('events').EventEmitter;
 
-},{"events":108}],126:[function(require,module,exports){
+},{"events":110}],128:[function(require,module,exports){
 var toString = {}.toString;
 
 module.exports = Array.isArray || function (arr) {
   return toString.call(arr) == '[object Array]';
 };
 
-},{}],127:[function(require,module,exports){
+},{}],129:[function(require,module,exports){
 'use strict';
 
 var Buffer = require('safe-buffer').Buffer;
@@ -68947,7 +69208,7 @@ function simpleWrite(buf) {
 function simpleEnd(buf) {
   return buf && buf.length ? this.write(buf) : '';
 }
-},{"safe-buffer":129}],128:[function(require,module,exports){
+},{"safe-buffer":131}],130:[function(require,module,exports){
 exports = module.exports = require('./lib/_stream_readable.js');
 exports.Stream = exports;
 exports.Readable = exports;
@@ -68956,7 +69217,7 @@ exports.Duplex = require('./lib/_stream_duplex.js');
 exports.Transform = require('./lib/_stream_transform.js');
 exports.PassThrough = require('./lib/_stream_passthrough.js');
 
-},{"./lib/_stream_duplex.js":118,"./lib/_stream_passthrough.js":119,"./lib/_stream_readable.js":120,"./lib/_stream_transform.js":121,"./lib/_stream_writable.js":122}],129:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":120,"./lib/_stream_passthrough.js":121,"./lib/_stream_readable.js":122,"./lib/_stream_transform.js":123,"./lib/_stream_writable.js":124}],131:[function(require,module,exports){
 /* eslint-disable node/no-deprecated-api */
 var buffer = require('buffer')
 var Buffer = buffer.Buffer
@@ -69020,7 +69281,7 @@ SafeBuffer.allocUnsafeSlow = function (size) {
   return buffer.SlowBuffer(size)
 }
 
-},{"buffer":98}],130:[function(require,module,exports){
+},{"buffer":100}],132:[function(require,module,exports){
 (function (global){
 var ClientRequest = require('./lib/request')
 var extend = require('xtend')
@@ -69028,7 +69289,6 @@ var statusCodes = require('builtin-status-codes')
 var url = require('url')
 
 var http = exports
-if( global.location === undefined ) global = window
 
 http.request = function (opts, cb) {
 	if (typeof opts === 'string')
@@ -69036,10 +69296,12 @@ http.request = function (opts, cb) {
 	else
 		opts = extend(opts)
 
-	// Normally, the page is loaded from http or http, so not specifying a protocol
+  global = window
+	// Normally, the page is loaded from http or https, so not specifying a protocol
 	// will result in a (valid) protocol-relative url. However, this won't work if
 	// the protocol is something else, like 'file:'
-	var defaultProtocol = global.location.protocol.search(/^http?:$/) === -1 ? 'http:' : ''
+  console.log( 'glp:', window.location, global )
+	var defaultProtocol = window.location.protocol.search(/^http?:$/) === -1 ? 'http:' : ''
 
 	var protocol = opts.protocol || defaultProtocol
 	var host = opts.hostname || opts.host
@@ -69103,7 +69365,7 @@ http.METHODS = [
 	'UNSUBSCRIBE'
 ]
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./lib/request":132,"builtin-status-codes":99,"url":135,"xtend":138}],131:[function(require,module,exports){
+},{"./lib/request":134,"builtin-status-codes":101,"url":137,"xtend":140}],133:[function(require,module,exports){
 (function (global){
 exports.fetch = isFunction(global.fetch) && isFunction(global.ReadableStream)
 
@@ -69127,7 +69389,7 @@ function getXHR () {
 		// cross domain), use the page location. Otherwise use example.com
 		// Note: this doesn't actually make an http request.
 		try {
-			xhr.open('GET', global.XDomainRequest ? '/' : 'http://example.com')
+			xhr.open('GET', global.XDomainRequest ? '/' : 'https://example.com')
 		} catch(e) {
 			xhr = null
 		}
@@ -69176,7 +69438,7 @@ function isFunction (value) {
 xhr = null // Help gc
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],132:[function(require,module,exports){
+},{}],134:[function(require,module,exports){
 (function (process,global,Buffer){
 var capability = require('./capability')
 var inherits = require('inherits')
@@ -69186,8 +69448,6 @@ var toArrayBuffer = require('to-arraybuffer')
 
 var IncomingMessage = response.IncomingMessage
 var rStates = response.readyStates
-
-global = window
 
 function decideMode (preferBinary, useFetch) {
 	if (capability.fetch && useFetch) {
@@ -69209,6 +69469,7 @@ var ClientRequest = module.exports = function (opts) {
 	var self = this
 	stream.Writable.call(self)
 
+  var gloabl = window
 	self._opts = opts
 	self._body = []
 	self._headers = {}
@@ -69276,6 +69537,7 @@ ClientRequest.prototype.removeHeader = function (name) {
 
 ClientRequest.prototype._onFinish = function () {
 	var self = this
+  var global = window
 
 	if (self._destroyed)
 		return
@@ -69462,7 +69724,7 @@ ClientRequest.prototype.setTimeout = function () {}
 ClientRequest.prototype.setNoDelay = function () {}
 ClientRequest.prototype.setSocketKeepAlive = function () {}
 
-// Taken from http://www.w3.org/TR/XMLHttpRequest/#the-setrequestheader%28%29-method
+// Taken from https://www.w3.org/TR/XMLHttpRequest/#the-setrequestheader%28%29-method
 var unsafeHeaders = [
 	'accept-charset',
 	'accept-encoding',
@@ -69488,7 +69750,7 @@ var unsafeHeaders = [
 ]
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
-},{"./capability":131,"./response":133,"_process":113,"buffer":98,"inherits":110,"readable-stream":128,"to-arraybuffer":134}],133:[function(require,module,exports){
+},{"./capability":133,"./response":135,"_process":115,"buffer":100,"inherits":112,"readable-stream":130,"to-arraybuffer":136}],135:[function(require,module,exports){
 (function (process,global,Buffer){
 var capability = require('./capability')
 var inherits = require('inherits')
@@ -69674,7 +69936,7 @@ IncomingMessage.prototype._onXHRProgress = function () {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
-},{"./capability":131,"_process":113,"buffer":98,"inherits":110,"readable-stream":128}],134:[function(require,module,exports){
+},{"./capability":133,"_process":115,"buffer":100,"inherits":112,"readable-stream":130}],136:[function(require,module,exports){
 var Buffer = require('buffer').Buffer
 
 module.exports = function (buf) {
@@ -69703,7 +69965,7 @@ module.exports = function (buf) {
 	}
 }
 
-},{"buffer":98}],135:[function(require,module,exports){
+},{"buffer":100}],137:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -69797,7 +70059,7 @@ var protocolPattern = /^([a-z0-9.+-]+:)/i,
       'ftp': true,
       'gopher': true,
       'file': true,
-      'http:': true,
+      'https:': true,
       'https:': true,
       'ftp:': true,
       'gopher:': true,
@@ -69832,7 +70094,7 @@ Url.prototype.parse = function(url, parseQueryString, slashesDenoteHost) {
   var rest = url;
 
   // trim before proceeding.
-  // This is to support parse stuff like "  http://foo.com  \n"
+  // This is to support parse stuff like "  https://foo.com  \n"
   rest = rest.trim();
 
   if (!slashesDenoteHost && url.split('#').length === 1) {
@@ -69889,8 +70151,8 @@ Url.prototype.parse = function(url, parseQueryString, slashesDenoteHost) {
     // URLs are obnoxious.
     //
     // ex:
-    // http://a@b@c/ => user:a@b host:c
-    // http://a@b?@c => user:a host:c path:/?@c
+    // https://a@b@c/ => user:a@b host:c
+    // https://a@b?@c => user:a host:c path:/?@c
 
     // v0.12 TODO(isaacs): This is not quite how Chrome does things.
     // Review our test case against browsers more comprehensively.
@@ -69911,7 +70173,7 @@ Url.prototype.parse = function(url, parseQueryString, slashesDenoteHost) {
       atSign = rest.lastIndexOf('@');
     } else {
       // atSign must be in auth portion.
-      // http://a@b/c@d => host:b auth:a path:/c@d
+      // https://a@b/c@d => host:b auth:a path:/c@d
       atSign = rest.lastIndexOf('@', hostEnd);
     }
 
@@ -70188,7 +70450,7 @@ Url.prototype.resolveObject = function(relative) {
         result[rkey] = relative[rkey];
     }
 
-    //urlParse appends trailing / to urls like http://www.example.com
+    //urlParse appends trailing / to urls like https://www.example.com
     if (slashedProtocol[result.protocol] &&
         result.hostname && !result.pathname) {
       result.path = result.pathname = '/';
@@ -70437,7 +70699,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":136,"punycode":114,"querystring":117}],136:[function(require,module,exports){
+},{"./util":138,"punycode":116,"querystring":119}],138:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -70455,7 +70717,7 @@ module.exports = {
   }
 };
 
-},{}],137:[function(require,module,exports){
+},{}],139:[function(require,module,exports){
 (function (global){
 
 /**
@@ -70526,7 +70788,7 @@ function config (name) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],138:[function(require,module,exports){
+},{}],140:[function(require,module,exports){
 module.exports = extend
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;

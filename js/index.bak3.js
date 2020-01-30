@@ -6643,7 +6643,7 @@ var MT = require( 'coreh-mousetrap' )(),
 
 var GE = {
   // REMEMBER TO CHECK WELCOME.INIT()
-  SERVER_URL : 'http://' + window.location.host,
+  SERVER_URL : 'https://' + window.location.host,
   CodeMirror:   require( 'codemirror' ),
   CodeMirrorJS: require( 'codemirror/mode/javascript/javascript' ),
   CodeMirrorC:  require( 'codemirror/mode/clike/clike' ),  
@@ -29112,18 +29112,7 @@ Gibberish.Hat.prototype = Gibberish._oscillator;
       }.bind( this ),
       
       note: function( name, velocity, cents ) {
-        if( typeof name === 'string' ) name[0] = name[0].toUpperCase()
-	if( name.indexOf( 'E#' ) > -1 ) name = 'F' + name[2]
-	if( name.indexOf('#') > -1 ) {
-          var split = name.split('#')
-          var char = String.fromCharCode( name[0].charCodeAt(0) + 1 )
-	  name = char + 'b' + split[1]
-
-	}
-
-	if( name.indexOf( 'Cb' ) > -1 ) name = 'B' + name[2]
-	if( name.indexOf( 'Fb' ) > -1 ) name = 'E' + name[2]
-        if( this.isLoaded && name !== null && this.buffers[ name ] !== undefined ) {
+        if( this.isLoaded ) {
           this.playing.push({
             buffer:this.buffers[ name ],
             phase:0,
@@ -29131,10 +29120,7 @@ Gibberish.Hat.prototype = Gibberish._oscillator;
             length:this.buffers[ name ].length,
             velocity: isNaN( velocity ) ? 1 : velocity
           })
-        }else if( this.isLoaded ){
-          console.log( 'not found:', name, this.buffers )
-	}
-	  
+        }
       },
       interpolate: Gibberish.interpolate.bind( this ),
       panner: Gibberish.makePanner()
@@ -29262,7 +29248,7 @@ return Gibberish;
         var host = 'freesound.org';
 
         var uris = {
-            base : 'http://'+host+'/apiv2',
+            base : 'https://'+host+'/apiv2',
             textSearch : '/search/text/',
             contentSearch: '/search/content/',
             combinedSearch : '/sounds/search/combined/',
@@ -35011,7 +34997,6 @@ var Theory = {
             note = _note
             break;
           case 'object':
-            if( _note === null ) return
             if( _note.fq )
               note = _note.fq()
             else
@@ -69028,7 +69013,6 @@ var statusCodes = require('builtin-status-codes')
 var url = require('url')
 
 var http = exports
-if( global.location === undefined ) global = window
 
 http.request = function (opts, cb) {
 	if (typeof opts === 'string')
@@ -69036,10 +69020,10 @@ http.request = function (opts, cb) {
 	else
 		opts = extend(opts)
 
-	// Normally, the page is loaded from http or http, so not specifying a protocol
+	// Normally, the page is loaded from http or https, so not specifying a protocol
 	// will result in a (valid) protocol-relative url. However, this won't work if
 	// the protocol is something else, like 'file:'
-	var defaultProtocol = global.location.protocol.search(/^http?:$/) === -1 ? 'http:' : ''
+	var defaultProtocol = global.location.protocol.search(/^https?:$/) === -1 ? 'http:' : ''
 
 	var protocol = opts.protocol || defaultProtocol
 	var host = opts.hostname || opts.host
@@ -69127,7 +69111,7 @@ function getXHR () {
 		// cross domain), use the page location. Otherwise use example.com
 		// Note: this doesn't actually make an http request.
 		try {
-			xhr.open('GET', global.XDomainRequest ? '/' : 'http://example.com')
+			xhr.open('GET', global.XDomainRequest ? '/' : 'https://example.com')
 		} catch(e) {
 			xhr = null
 		}
@@ -69186,8 +69170,6 @@ var toArrayBuffer = require('to-arraybuffer')
 
 var IncomingMessage = response.IncomingMessage
 var rStates = response.readyStates
-
-global = window
 
 function decideMode (preferBinary, useFetch) {
 	if (capability.fetch && useFetch) {

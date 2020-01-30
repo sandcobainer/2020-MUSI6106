@@ -716,9 +716,7 @@ var Gibber = {
 
     if( Gibber.Audio ) {
       $.subscribe( 'audio.init', function( audio ) {
-        var __clear = Gibber.clear
         audio.export( target )
-        Gibber.clear = __clear
       })
     }
     
@@ -761,15 +759,12 @@ var Gibber = {
       Gibber.Pattern = Gibber.Pattern( Gibber )
       if( Gibber.Audio ) {
         var _export = Gibber.export.bind( Gibber )
-        var __clear__ = Gibber.clear
         $.extend( Gibber, Gibber.Audio )
-        Gibber.clear = __clear__
-
         Gibber.export = _export
         //Gibber.Audio.export( Gibber )
         var __save = options.callback
         options.callback = function() {
-          //Gibber.Audio.export( Gibber )
+          Gibber.Audio.export( Gibber )
           if( __save !== null ) __save()
         }
         Gibber.Audio.init( options.callback, Gibber.dollar ) 
@@ -992,9 +987,7 @@ var Gibber = {
     var args = Array.prototype.slice.call( arguments, 0 )
     if( Gibber.Audio ) Gibber.Audio.clear.apply( Gibber.Audio, args );
     
-    if( Gibber.Graphics ) {
-      Gibber.Graphics.clear( Gibber.Graphics, args )
-    }
+    if( Gibber.Graphics ) Gibber.Graphics.clear( Gibber.Graphics, args )
 
     //Gibber.proxy( window, [ a ] )
     Gibber.proxy( window )
@@ -6643,7 +6636,7 @@ var MT = require( 'coreh-mousetrap' )(),
 
 var GE = {
   // REMEMBER TO CHECK WELCOME.INIT()
-  SERVER_URL : 'http://' + window.location.host,
+  SERVER_URL : 'https://' + window.location.host,
   CodeMirror:   require( 'codemirror' ),
   CodeMirrorJS: require( 'codemirror/mode/javascript/javascript' ),
   CodeMirrorC:  require( 'codemirror/mode/clike/clike' ),  
@@ -6756,9 +6749,7 @@ var GE = {
       window.flash = GE.Message.postFlash
       window.post = GE.Message.post
 
-      Gibber.dollar.subscribe( 'audio.init', function() {
-        GE.Storage.runUserSetup()
-      })
+      GE.Storage.runUserSetup()
       
       GE.isInitializing = false
       
@@ -9023,7 +9014,7 @@ var Filters = module.exports = {
       phase: 0,
       targetCount: 88,
       integralPhaseCorrection:0,
-      sampleRateRatio: 1,//Gibber.Audio.Core.context.sampleRate / 44100, // mySampleRate / masterSampleRate... which is always 44100
+      sampleRateRatio: Gibber.Audio.Core.context.sampleRate / 44100, // mySampleRate / masterSampleRate... which is always 44100
       
       runningMean: Filters.RunningMean( 50 ),
       runningMeanLong: Filters.RunningMean( 250 ),
@@ -29112,18 +29103,7 @@ Gibberish.Hat.prototype = Gibberish._oscillator;
       }.bind( this ),
       
       note: function( name, velocity, cents ) {
-        if( typeof name === 'string' ) name[0] = name[0].toUpperCase()
-	if( name.indexOf( 'E#' ) > -1 ) name = 'F' + name[2]
-	if( name.indexOf('#') > -1 ) {
-          var split = name.split('#')
-          var char = String.fromCharCode( name[0].charCodeAt(0) + 1 )
-	  name = char + 'b' + split[1]
-
-	}
-
-	if( name.indexOf( 'Cb' ) > -1 ) name = 'B' + name[2]
-	if( name.indexOf( 'Fb' ) > -1 ) name = 'E' + name[2]
-        if( this.isLoaded && name !== null && this.buffers[ name ] !== undefined ) {
+        if( this.isLoaded ) {
           this.playing.push({
             buffer:this.buffers[ name ],
             phase:0,
@@ -29131,10 +29111,7 @@ Gibberish.Hat.prototype = Gibberish._oscillator;
             length:this.buffers[ name ].length,
             velocity: isNaN( velocity ) ? 1 : velocity
           })
-        }else if( this.isLoaded ){
-          console.log( 'not found:', name, this.buffers )
-	}
-	  
+        }
       },
       interpolate: Gibberish.interpolate.bind( this ),
       panner: Gibberish.makePanner()
@@ -29262,7 +29239,7 @@ return Gibberish;
         var host = 'freesound.org';
 
         var uris = {
-            base : 'http://'+host+'/apiv2',
+            base : 'https://'+host+'/apiv2',
             textSearch : '/search/text/',
             contentSearch: '/search/content/',
             combinedSearch : '/sounds/search/combined/',
@@ -29318,14 +29295,13 @@ return Gibberish;
                 var options = {
                     host: host,
                     path: uri.substring(uri.indexOf("/",8),uri.length), // first '/' after 'http://'
-                    port: '443',
+                    port: '80',
                     method: method,
                     headers: {'Authorization': authHeader},
                     withCredentials:false,
                 };
-                console.log( 'http options:', options )
                 var req = http.request(options,function(res){
-                    res.setEncoding('utf8');            
+                    //res.setEncoding('utf8');            
                     res.on('data', function (data){ 
                         if([200,201,202].indexOf(res.statusCode)>=0)
                             success(wrapper?wrapper(data):data);
@@ -29349,7 +29325,6 @@ return Gibberish;
                         if(error) error(xhr.statusText);
                     }
                 };
-                console.log( method, uri )
                 xhr.open(method, uri);
                 xhr.setRequestHeader('Authorization',authHeader);
                 if(content_type!==undefined)
@@ -29619,8 +29594,7 @@ var times = [],
     Audio
 
 Audio = {
-  initialized: false, // only run clear function if initialized
-  // can't name export as Gibberish has the same nameAudio
+  // can't name export as Gibberish has the same name
   export: function( target ) {
     $.extend( target, Audio.Busses )       
     $.extend( target, Audio.Oscillators )
@@ -29687,8 +29661,7 @@ Audio = {
     
     Audio.Core.onstart = function() {
       Audio.Clock.start( true )
-
-
+              
       if( __onstart !== null ) { __onstart() }
       
       Audio.Score = Audio.Score( Gibber )
@@ -29718,15 +29691,12 @@ Audio = {
         
       Audio.Core.defineUgenProperty = Audio.defineUgenProperty
       
-      Object.assign( Gibber.Presets, Audio.Synths.Presets )
-      Object.assign( Gibber.Presets, Audio.Percussion.Presets )
-      Object.assign( Gibber.Presets, Audio.FX.Presets )
-
+      $.extend( Gibber.Presets, Audio.Synths.Presets )
+      $.extend( Gibber.Presets, Audio.Percussion.Presets )
+      $.extend( Gibber.Presets, Audio.FX.Presets )
 
       $.publish( 'audio.init', Audio )
       if( typeof callback === 'function' ) callback()
-
-      Audio.initialized = true
     }
     
     
@@ -29834,15 +29804,10 @@ Audio = {
     return this
   },
   clear: function() {
-    if( Audio.initialized === false ) return
     // Audio.analysisUgens.length = 0
     // Audio.sequencers.length = 0
     var args = Array.prototype.slice.call( arguments, 0 ),
-      scaleSeqIsConnected = false
-   
-    if( Gibber.Theory.scale !== undefined ) {
-      scaleSeqIsConnected = Gibber.Theory.scale.seq.isConnected
-    }
+        scaleSeqIsConnected = Audio.Theory.scale.seq.isConnected
     
     
     for( var i = 0; i < Audio.Master.inputs.length; i++ ) {
@@ -35011,7 +34976,6 @@ var Theory = {
             note = _note
             break;
           case 'object':
-            if( _note === null ) return
             if( _note.fq )
               note = _note.fq()
             else
@@ -39631,7 +39595,6 @@ Graphics = {
   },
   
   init : function( mode, container ) { 
-    $ = Gibber.dollar
     if( mode === '3d' && !window.WebGLRenderingContext ) {
       var msg = 'Your browser does not support WebGL. 2D drawing will work, but 3D geometries and shaders are not supported.'
         
@@ -69028,7 +68991,6 @@ var statusCodes = require('builtin-status-codes')
 var url = require('url')
 
 var http = exports
-if( global.location === undefined ) global = window
 
 http.request = function (opts, cb) {
 	if (typeof opts === 'string')
@@ -69036,10 +68998,10 @@ http.request = function (opts, cb) {
 	else
 		opts = extend(opts)
 
-	// Normally, the page is loaded from http or http, so not specifying a protocol
+	// Normally, the page is loaded from http or https, so not specifying a protocol
 	// will result in a (valid) protocol-relative url. However, this won't work if
 	// the protocol is something else, like 'file:'
-	var defaultProtocol = global.location.protocol.search(/^http?:$/) === -1 ? 'http:' : ''
+	var defaultProtocol = global.location.protocol.search(/^https?:$/) === -1 ? 'http:' : ''
 
 	var protocol = opts.protocol || defaultProtocol
 	var host = opts.hostname || opts.host
@@ -69127,7 +69089,7 @@ function getXHR () {
 		// cross domain), use the page location. Otherwise use example.com
 		// Note: this doesn't actually make an http request.
 		try {
-			xhr.open('GET', global.XDomainRequest ? '/' : 'http://example.com')
+			xhr.open('GET', global.XDomainRequest ? '/' : 'https://example.com')
 		} catch(e) {
 			xhr = null
 		}
@@ -69186,8 +69148,6 @@ var toArrayBuffer = require('to-arraybuffer')
 
 var IncomingMessage = response.IncomingMessage
 var rStates = response.readyStates
-
-global = window
 
 function decideMode (preferBinary, useFetch) {
 	if (capability.fetch && useFetch) {
