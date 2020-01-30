@@ -77,7 +77,7 @@ Error_t CCombFilter::FIRIntern(float** ppfInputBuffer, float** ppfOutputBuffer, 
             }
             else {
                 ppfOutputBuffer[c][i] = ppfInputBuffer[c][i] + (gain * delayLine[c][m_DelayLineLength - 1]);
-                shift(delayLine[c], m_DelayLineLength, ppfOutputBuffer[c][i]);
+                shift(delayLine[c], m_DelayLineLength, ppfInputBuffer[c][i]);
             }
 
         }
@@ -99,9 +99,7 @@ Error_t CCombFilter::IIRIntern(float** ppfInputBuffer, float** ppfOutputBuffer, 
                 ppfOutputBuffer[c][i] = ppfInputBuffer[c][i];
             }
             else {
-                float y = 0;
-                y = ppfInputBuffer[c][i] + (gain * delayLine[c][m_DelayLineLength - 1]);
-                ppfOutputBuffer[c][i] = ppfOutputBuffer[c][i] + (gain * )
+                ppfOutputBuffer[c][i] = ppfInputBuffer[c][i] + (gain * delayLine[c][m_DelayLineLength - 1]);
                 shift(delayLine[c], m_DelayLineLength, ppfOutputBuffer[c][i]);
             }
         }
