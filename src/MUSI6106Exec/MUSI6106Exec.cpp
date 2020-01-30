@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
     if (sFilterType=="FIR")
         pcCombFilter->init(CCombFilterIf::kCombFIR, sMaxFilterDelay, stFileSpec.fSampleRateInHz, stFileSpec.iNumChannels);
     else if (sFilterType == "IIR")
-        pcCombFilter->init(CCombFilterIf::CombFilterType_t::kCombIIR, sMaxFilterDelay,stFileSpec.fSampleRateInHz,stFileSpec.iNumChannels);
+        pcCombFilter->init(CCombFilterIf::kCombIIR, sMaxFilterDelay,stFileSpec.fSampleRateInHz,stFileSpec.iNumChannels);
     else
     {
     cout << "Error: Cannot initialize combfilter interface due to invalid filterType (FIR/IIR)";
