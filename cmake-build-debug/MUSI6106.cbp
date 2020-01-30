@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="MUSI6106"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\cmake.modules\;CMake Files\src\;CMake Files\src\MUSI6106Exec\;CMake Files\src\AudioFileIO\;CMake Files\src\CombFilter\;CMake Files\3rdparty\;CMake Files\3rdparty\sndlib\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="MUSI6106Exec">
+				<Option output="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/bin/debug/MUSI6106Exec" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/inc"/>
+					<Add directory="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/src/inc"/>
+					<Add directory="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/inc"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/MUSI6106Exec/Makefile&quot;  VERBOSE=1 MUSI6106Exec"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/MUSI6106Exec/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/MUSI6106Exec/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/MUSI6106Exec/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="MUSI6106Exec/fast">
+				<Option output="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/bin/debug/MUSI6106Exec" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/inc"/>
+					<Add directory="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/src/inc"/>
+					<Add directory="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/inc"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/MUSI6106Exec/Makefile&quot;  VERBOSE=1 MUSI6106Exec/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/MUSI6106Exec/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/MUSI6106Exec/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/MUSI6106Exec/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="AudioFileIO">
+				<Option output="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/lib/debug/libAudioFileIO.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/AudioFileIO"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/inc"/>
+					<Add directory="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/src/inc"/>
+					<Add directory="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/inc"/>
+					<Add directory="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/3rdparty/sndlib"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/AudioFileIO/Makefile&quot;  VERBOSE=1 AudioFileIO"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/AudioFileIO/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/AudioFileIO/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/AudioFileIO/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="AudioFileIO/fast">
+				<Option output="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/lib/debug/libAudioFileIO.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/AudioFileIO"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/inc"/>
+					<Add directory="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/src/inc"/>
+					<Add directory="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/inc"/>
+					<Add directory="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/3rdparty/sndlib"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/AudioFileIO/Makefile&quot;  VERBOSE=1 AudioFileIO/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/AudioFileIO/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/AudioFileIO/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/AudioFileIO/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="sndlib">
+				<Option output="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/lib/debug/libsndlib.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/AudioFileIO/sndlib"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/3rdparty/sndlib"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/AudioFileIO/sndlib/Makefile&quot;  VERBOSE=1 sndlib"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/AudioFileIO/sndlib/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/AudioFileIO/sndlib/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/AudioFileIO/sndlib/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="sndlib/fast">
+				<Option output="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/lib/debug/libsndlib.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/AudioFileIO/sndlib"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/3rdparty/sndlib"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/AudioFileIO/sndlib/Makefile&quot;  VERBOSE=1 sndlib/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/AudioFileIO/sndlib/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/AudioFileIO/sndlib/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/AudioFileIO/sndlib/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="CombFilter">
+				<Option output="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/lib/debug/libCombFilter.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/CombFilter"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/inc"/>
+					<Add directory="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/src/inc"/>
+					<Add directory="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/inc"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/CombFilter/Makefile&quot;  VERBOSE=1 CombFilter"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/CombFilter/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/CombFilter/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/CombFilter/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="CombFilter/fast">
+				<Option output="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/lib/debug/libCombFilter.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/CombFilter"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/inc"/>
+					<Add directory="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/src/inc"/>
+					<Add directory="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/inc"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/CombFilter/Makefile&quot;  VERBOSE=1 CombFilter/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/CombFilter/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/CombFilter/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake-build-debug/CombFilter/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/3rdparty/sndlib/CMakeLists.txt">
+			<Option target="sndlib"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/3rdparty/sndlib/_sndlib.h">
+			<Option target="sndlib"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/3rdparty/sndlib/audio.c">
+			<Option target="sndlib"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/3rdparty/sndlib/clm-strings.h">
+			<Option target="sndlib"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/3rdparty/sndlib/clm.c">
+			<Option target="sndlib"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/3rdparty/sndlib/clm.h">
+			<Option target="sndlib"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/3rdparty/sndlib/clm2xen.c">
+			<Option target="sndlib"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/3rdparty/sndlib/clm2xen.h">
+			<Option target="sndlib"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/3rdparty/sndlib/headers.c">
+			<Option target="sndlib"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/3rdparty/sndlib/io.c">
+			<Option target="sndlib"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/3rdparty/sndlib/mus-config.h">
+			<Option target="sndlib"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/3rdparty/sndlib/s7.c">
+			<Option target="sndlib"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/3rdparty/sndlib/s7.h">
+			<Option target="sndlib"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/3rdparty/sndlib/sndlib-strings.h">
+			<Option target="sndlib"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/3rdparty/sndlib/sndlib.h">
+			<Option target="sndlib"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/3rdparty/sndlib/sndlib2xen.c">
+			<Option target="sndlib"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/3rdparty/sndlib/sndlib2xen.h">
+			<Option target="sndlib"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/3rdparty/sndlib/sound.c">
+			<Option target="sndlib"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/3rdparty/sndlib/unix-config.h">
+			<Option target="sndlib"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/3rdparty/sndlib/vct.c">
+			<Option target="sndlib"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/3rdparty/sndlib/vct.h">
+			<Option target="sndlib"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/3rdparty/sndlib/xen.c">
+			<Option target="sndlib"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/3rdparty/sndlib/xen.h">
+			<Option target="sndlib"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/src/AudioFileIO/AudioFile.cpp">
+			<Option target="AudioFileIO"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/src/AudioFileIO/AudioFile.h">
+			<Option target="AudioFileIO"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/src/AudioFileIO/AudioFileIf.cpp">
+			<Option target="AudioFileIO"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/src/AudioFileIO/CMakeLists.txt">
+			<Option target="AudioFileIO"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/src/CombFilter/CMakeLists.txt">
+			<Option target="CombFilter"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/src/CombFilter/CombFilter.cpp">
+			<Option target="CombFilter"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/src/CombFilter/CombFilterIf.cpp">
+			<Option target="CombFilter"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/src/MUSI6106Exec/CMakeLists.txt">
+			<Option target="MUSI6106Exec"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/src/MUSI6106Exec/MUSI6106Exec.cpp">
+			<Option target="MUSI6106Exec"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/src/inc/AudioFileIf.h">
+			<Option target="MUSI6106Exec"/>
+			<Option target="CombFilter"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/src/inc/CombFilter.h">
+			<Option target="MUSI6106Exec"/>
+			<Option target="CombFilter"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/src/inc/CombFilterIf.h">
+			<Option target="MUSI6106Exec"/>
+			<Option target="CombFilter"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/src/inc/Util.h">
+			<Option target="MUSI6106Exec"/>
+			<Option target="CombFilter"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/src/inc/Vector.h">
+			<Option target="MUSI6106Exec"/>
+			<Option target="CombFilter"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake.modules/AddIncDirectories.cmake">
+			<Option virtualFolder="CMake Files\cmake.modules\"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake.modules/AddSrcDirectories.cmake">
+			<Option virtualFolder="CMake Files\cmake.modules\"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake.modules/SetOsLibs.cmake">
+			<Option virtualFolder="CMake Files\cmake.modules\"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake.modules/SetOutputDir.cmake">
+			<Option virtualFolder="CMake Files\cmake.modules\"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/cmake.modules/SetPlatform.cmake">
+			<Option virtualFolder="CMake Files\cmake.modules\"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/src/MUSI6106Config.h.in">
+			<Option virtualFolder="CMake Files\src\"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/src/MUSI6106Exec/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\src\MUSI6106Exec\"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/src/AudioFileIO/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\src\AudioFileIO\"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/src/CombFilter/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\src\CombFilter\"/>
+		</Unit>
+		<Unit filename="/Users/sandeepdasari/Downloads/2020-MUSI6106-ass1_stub/3rdparty/sndlib/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\3rdparty\sndlib\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
