@@ -39,10 +39,10 @@ const int  CCombFilterIf::getVersion (const Version_t eVersionIdx)
         iVersion    = MUSI6106_VERSION_MAJOR; 
         break;
     case kMinor:
-        iVersion    = MUSI6106_VERSION_MINOR; 
+        iVersion    = MUSI6106_VERSION_MINOR;
         break;
     case kPatch:
-        iVersion    = MUSI6106_VERSION_PATCH; 
+        iVersion    = MUSI6106_VERSION_PATCH;
         break;
     case kNumVersionInts:
         iVersion    = -1;
