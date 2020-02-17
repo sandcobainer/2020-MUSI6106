@@ -107,7 +107,6 @@ public:
             return m_ptBuff[m_iReadIdx];
         else
         {
-            
             // compute fraction for linear interpolation 
             int     iOffset = static_cast<int>(std::floor(fOffset));
             float   fFrac   = fOffset - iOffset;

@@ -271,6 +271,7 @@ SUITE(CombFilter)
 
         for (int c = 0; c < m_iNumChannels; c++)
             CSynthesis::generateSine (m_ppfInputData[c], 387.F, m_fSampleRate, m_iDataLength, .8F, static_cast<float>(c*M_PI_2));
+        
         m_pCombFilter->setParam(CCombFilterIf::kParamGain, m_fGain);
         m_pCombFilter->setParam(CCombFilterIf::kParamDelay, m_fDelay);
 

@@ -5,9 +5,7 @@
 #include <cstdio>
 
 #include "UnitTest++.h"
-
 #include "Synthesis.h"
-
 #include "RingBuffer.h"
 
 SUITE(RingBuff)
