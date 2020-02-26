@@ -2,7 +2,7 @@
 //  Vibrato.h
 //  MUSI6106
 //
-//  Created by user on 2/15/20.
+//  Created by Sandeep on 2/15/20.
 //
 
 #ifndef Vibrato_h
@@ -12,7 +12,8 @@
 #include "RingBuffer.h"
 #include "LFO.h"
 
-/*! \Vibrato class to simulate the vibrato effect using a RingBuffer and an LFO
+/*! \brief Vibrato class to simulate a vibrato effect
+ *         using a RingBuffer and an LFO
  */
 class Vibrato
 {
@@ -33,14 +34,6 @@ public:
      \return const char*
      */
     static const char* getBuildDate ();
-    
-    /*! initializes a Vibrato instance
-     \param fDelayLengthInS basic delay in seconds
-     \param fSampleRateInHz sample rate in Hz
-     \param iNumChannels number of audio channels
-     \return Error_t
-     */
-    Error_t init (float fDelayLengthInS, float fSampleRateInHz, int iNumChannels);
     
     /*! resets the internal variables  (requires new call of init)
      \return Error_t
@@ -69,11 +62,11 @@ public:
     Error_t process (float **ppfInputBuffer, float **ppfOutputBuffer, int iNumberOfFrames);
     
 protected:
-    CRingBuffer<float>  **m_ppCDelayRing;
-    LFO                 *m_lfoBuffer;
+    CRingBuffer<float>  **m_ppCDelayRing;                   //!< ring buffer for delay line
+    LFO                 *m_lfoBuffer;                       //!< LFO instance
     
-    float   m_afParam[Vibrato::kNumFilterParams];
-    float   m_aafParamRange[Vibrato::kNumFilterParams][2];
+    float   m_afParam[Vibrato::kNumFilterParams];           //!< hold params in an accessible array
+    float   m_aafParamRange[Vibrato::kNumFilterParams][2];  //!< hold param ranges in an accessible array
     
 private:
     
@@ -82,11 +75,11 @@ private:
     bool    isInParamRange (Vibrato::FilterParam_t eParam, float fValue);
     float           writePosL;
     
-    float           m_fSampleRate;                  //!< audio sample rate in Hz
-    int             m_iNumChannels;                 //!< number of audio channels
-    float           m_fDelayLengthInSamples;        //!< basic delay length to start from
-    float           m_fMaxDelayLengthInSamples;
-    float           m_fWidthInSamples;
+    float           m_fSampleRate;                          //!< audio sample rate in Hz
+    int             m_iNumChannels;                         //!< number of audio channels
+    float           m_fDelayLengthInSamples;                //!< basic delay length in samples
+    float           m_fMaxDelayLengthInSamples;             //!< max delay length in samples
+    float           m_fWidthInSamples;                      //!< width in samples
 };
 
 

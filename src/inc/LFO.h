@@ -1,3 +1,9 @@
+//
+//  Vibrato.h
+//  MUSI6106
+//
+//  Created by Sandeep on 2/15/20.
+//
 #ifndef LFO_h
 #define LFO_h
 
@@ -9,7 +15,8 @@
 #include "Util.h"
 #include "RingBuffer.h"
 
-/*! \LFO class for a wavetable LFO
+/*! \brief LFO class for a wavetable LFO
+ *         using RingBuffer
 */
 class LFO
 {
@@ -33,6 +40,11 @@ public:
         waveTable    = 0;
     }
 
+    /*! generate a sine way and store in a waveTable ring buffer
+     \param modFreq frequency of sine wave used to calculate increment
+     \param sampleRate sampleRate in Hertz
+     \return Error_t
+     */
     Error_t generateSine (float modFreq, float sampleRate)
     {
         increment = modFreq * wtSize / sampleRate;
@@ -44,27 +56,41 @@ public:
         return kNoError;
     }
     
+    /*! get current waveTable value based on increment
+     \return float
+     */
     float getVal()
     {
         phase = fmod ((phase + increment), wtSize - 1);
         return depth * (waveTable->get(phase));
     }
     
+    /*! set amplitude of LFO
+     \param amplitude depth of waveTable LFO
+     \return Error_t
+     */
     Error_t setDepth(float amplitude)
     {
         depth = amplitude;
         return kNoError;
     }
     
+    /*! get read index of waveTable ring buffer
+     \return float
+     */
     float getReadIdx()
     {
         return waveTable->getReadIdx();
     }
     
+    /*! get write index of waveTable ring buffer
+     \return float
+     */
     float getWriteIdx()
     {
         return waveTable->getWriteIdx();
     }
+    
     /*! set buffer content to 0 AND set phase index to 0
      \return void
      */
@@ -75,13 +101,12 @@ public:
         phase = 0.f;
     }
     
-    float           increment;
     
 protected:
-    CRingBuffer<float>  *waveTable;
-    
-    
+    CRingBuffer<float>  *waveTable;              //!< ringbuffer for waveTable LFO
+
 private:
+    float           increment;                   //!< store increment of waveTable based on modFrequency and wtSize
     float           sampleRate;                  //!< audio sample rate in Hz
     int             wtSize;                      //!< size of waveTable (equal to width/amplitude of Vibrato)
     float           phase;                       //!< index of current location in waveTable

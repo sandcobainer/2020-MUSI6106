@@ -11,7 +11,9 @@
 #include "Vibrato.h"
 
 static const char*  kCMyProjectBuildDate             = __DATE__;
-
+/*! \brief brief constructor that handles vibrato parameter ranges
+ *         and initializes delayLine, LFO,
+ */
 Vibrato::Vibrato (float fDelayLengthInS, float fWidthSamplesInS, float fSampleRateInHz, int iNumChannels) :
 m_ppCDelayRing(0)
 {
@@ -58,6 +60,9 @@ m_ppCDelayRing(0)
     m_aafParamRange[Vibrato::kParamDepth][1]  = 1.0f;
 }
 
+/*! \brief brief destructor that handles de-allocating
+ *         ring buffer delay line in Vibrato
+ */
 Vibrato::~Vibrato ()
 {
     if (m_ppCDelayRing)
@@ -74,14 +79,17 @@ const char*  Vibrato::getBuildDate ()
     return kCMyProjectBuildDate;
 }
 
+
 Error_t Vibrato::reset()
 {
+    // reset delay ring buffer
     for (int c = 0; c < m_iNumChannels; c++)
     {
         m_ppCDelayRing[c]->reset ();
         m_ppCDelayRing[c]->setWriteIdx(CUtil::float2int<int>(m_fDelayLengthInSamples));
     }
     
+    // reset vibrato variables
     m_fDelayLengthInSamples   = 0;
     m_fSampleRate       = 0;
     m_iNumChannels      = 0;
@@ -91,6 +99,7 @@ Error_t Vibrato::reset()
 
 bool Vibrato::isInParamRange( Vibrato::FilterParam_t eParam, float fValue )
 {
+    // check for params in range
     if (fValue < m_aafParamRange[eParam][0] || fValue > m_aafParamRange[eParam][1])
     {
         return false;
@@ -101,6 +110,7 @@ bool Vibrato::isInParamRange( Vibrato::FilterParam_t eParam, float fValue )
     }
 }
 
+
 Error_t Vibrato::process (float **ppfInputBuffer, float **ppfOutputBuffer, int iNumberOfFrames)
 {
     for(int c = 0; c < m_iNumChannels; c++)
@@ -108,23 +118,25 @@ Error_t Vibrato::process (float **ppfInputBuffer, float **ppfOutputBuffer, int i
         
         for (int i = 0; i < iNumberOfFrames; i++)
         {
-            float sine   =  m_lfoBuffer->getVal();
-            float offset =  m_fDelayLengthInSamples + (sine * m_fWidthInSamples);
+            // get offset from LFO
+            float offset =  m_fDelayLengthInSamples + (m_lfoBuffer->getVal() * m_fWidthInSamples);
             
+            // get writeInd of delay ring
             float writeInd     = m_ppCDelayRing[c] -> getWriteIdx();
-            float ringContents = 0;
+            
+            // check if offset < writeInd
             if (offset <  writeInd)
             {
+                // read offset from delay line
                 m_ppCDelayRing[c] -> setReadIdx(writeInd - offset);
-                ringContents      = m_ppCDelayRing[c]->getPostInc();
                 
-                ppfOutputBuffer[c][i] = ringContents;
+                ppfOutputBuffer[c][i] = m_ppCDelayRing[c]->getPostInc();
+                // insert into delayring
                 m_ppCDelayRing[c]     ->putPostInc(ppfInputBuffer[c][i]);
             }
             else
             {
-                ringContents = 0;
-                ppfOutputBuffer[c][i] = ringContents;
+                ppfOutputBuffer[c][i] = 0;
                 m_ppCDelayRing[c]->putPostInc(ppfInputBuffer[c][i]);
             }
         }
