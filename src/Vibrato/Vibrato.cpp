@@ -27,8 +27,9 @@ m_ppCDelayRing(0)
     m_fWidthInSamples           = fWidthSamplesInS * fSampleRateInHz;
     
     // calculate max delay length for buffer : 2 + basic_delay + (maxWidth*2)
-    m_fMaxDelayLengthInSamples  = floor(2 + m_fDelayLengthInSamples + (1.0f * fSampleRateInHz* 2));
+    m_fMaxDelayLengthInSamples  = CUtil::float2int<int> (1 + m_fDelayLengthInSamples + m_fWidthInSamples);
     
+    std::cout<< m_fWidthInSamples << " "<< m_fMaxDelayLengthInSamples << std::endl;
     // allocate memory for ring buffer delay
     m_ppCDelayRing = new CRingBuffer<float>*[m_iNumChannels];
     for (int c = 0; c < m_iNumChannels; c++)
@@ -86,7 +87,7 @@ Error_t Vibrato::reset()
     for (int c = 0; c < m_iNumChannels; c++)
     {
         m_ppCDelayRing[c]->reset ();
-        m_ppCDelayRing[c]->setWriteIdx(CUtil::float2int<int>(m_fDelayLengthInSamples));
+        m_ppCDelayRing[c]->setWriteIdx(CUtil::float2int<int>(m_fMaxDelayLengthInSamples));
     }
     
     // reset vibrato variables
@@ -115,35 +116,21 @@ Error_t Vibrato::process (float **ppfInputBuffer, float **ppfOutputBuffer, int i
 {
     for(int c = 0; c < m_iNumChannels; c++)
     {
-        
         for (int i = 0; i < iNumberOfFrames; i++)
         {
             // get offset from LFO
             float offset =  m_fDelayLengthInSamples + (m_lfoBuffer->getVal() * m_fWidthInSamples);
             
-            // get writeInd of delay ring
-            float writeInd     = m_ppCDelayRing[c] -> getWriteIdx();
+            // insert into delayring
+            m_ppCDelayRing[c] -> putPostInc(ppfInputBuffer[c][i]);
             
-            // check if offset < writeInd
-            if (offset <  writeInd)
-            {
-                // read offset from delay line
-                m_ppCDelayRing[c] -> setReadIdx(writeInd - offset);
-                
-                ppfOutputBuffer[c][i] = m_ppCDelayRing[c]->getPostInc();
-                // insert into delayring
-                m_ppCDelayRing[c]     ->putPostInc(ppfInputBuffer[c][i]);
-            }
-            else
-            {
-                ppfOutputBuffer[c][i] = 0;
-                m_ppCDelayRing[c]->putPostInc(ppfInputBuffer[c][i]);
-            }
+            // read offset from delay line
+            ppfOutputBuffer[c][i] = m_ppCDelayRing[c]->get(-offset);
+            m_ppCDelayRing[c] -> getPostInc();
         }
     }
     return kNoError;
 }
-
 
 Error_t Vibrato::setParam( Vibrato::FilterParam_t eParam, float fParamValue )
 {
