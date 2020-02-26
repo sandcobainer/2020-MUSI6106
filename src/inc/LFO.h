@@ -53,6 +53,7 @@ public:
     Error_t setDepth(float amplitude)
     {
         depth = amplitude;
+        return kNoError;
     }
     
     float getReadIdx()

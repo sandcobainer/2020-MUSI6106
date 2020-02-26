@@ -118,13 +118,13 @@ Error_t Vibrato::process (float **ppfInputBuffer, float **ppfOutputBuffer, int i
                 m_ppCDelayRing[c] -> setReadIdx(writeInd - offset);
                 ringContents      = m_ppCDelayRing[c]->getPostInc();
                 
-                ppfOutputBuffer[c][i] = ppfInputBuffer[c][i] + ringContents;
+                ppfOutputBuffer[c][i] = ringContents;
                 m_ppCDelayRing[c]     ->putPostInc(ppfInputBuffer[c][i]);
             }
             else
             {
                 ringContents = 0;
-                ppfOutputBuffer[c][i] = ppfInputBuffer[c][i] + ringContents;
+                ppfOutputBuffer[c][i] = ringContents;
                 m_ppCDelayRing[c]->putPostInc(ppfInputBuffer[c][i]);
             }
         }
