@@ -19,6 +19,15 @@ public:
         kNumMatrixDimensions
     };
 
+    enum Directions_t
+    {
+        kHoriz,
+        kVert,
+        kDiag,
+
+        kNumDirections
+    };
+    
     CDtw(void);
     virtual ~CDtw(void);
 
@@ -55,16 +64,33 @@ public:
     \return Error_t
     */
     Error_t getPath (int **ppiPathResult) const;
-
+    
+    /*! returns the minimum of directions in cost matrix
+    \return float
+    */
+    float getMinCost (float horiz, float vert, float diag, CDtw::Directions_t& kDirection) const;
+    
 private:
-    enum Directions_t
+    
+    enum DtwParam_t
     {
-        kHoriz,
-        kVert,
-        kDiag,
+        xLength,
+        yLength,
 
-        kNumDirections
+        kDtwParams
     };
+    
+    float **ppfDistanceMatrix;
+    float **ppfCostMatrix;
+    int   **ppiPathResult;
+    
+    Directions_t **ppfDirectionsMatrix;
+    bool  m_bIsInitialized;
+    
+    int   m_iNumRows;
+    int   m_iNumCols;
+    
+    float pathCost;
 };
 
 

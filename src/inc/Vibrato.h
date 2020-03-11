@@ -57,7 +57,7 @@ private:
 
     float   m_fSampleRate;
     int     m_iNumChannels;
-    float m_aafParamRange[kNumVibratoParams][2];
+    float   m_aafParamRange[kNumVibratoParams][2];
 };
 
 #endif // #if !defined(__Vibrato_hdr__)
